@@ -1,0 +1,1509 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is an API providing travelling sougestions for tourists.",
+    "version" : "1.0.0",
+    "title" : "ToWas API",
+    "contact" : {
+      "email" : "barbieru.ana.gabriela@info.uaic.ro"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/anagabrielabarbieru94/ToWas/1.0.0",
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "tourists",
+    "description" : "Operations available to regular users (tourists)"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/users" : {
+      "get" : {
+        "tags" : [ "admins" ],
+        "summary" : "get a list of all app users",
+        "description" : "See all users from database",
+        "operationId" : "getAllUsers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "All users from application system",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "adds an user in database",
+        "description" : "Adds an user to the system",
+        "operationId" : "addUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "userItem",
+          "description" : "User item to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "user added"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing user already"
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Info for a specific user (tourist)",
+        "description" : "Shows information for a specific user from system",
+        "operationId" : "showUserById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "pass the search id for looking up users",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "user not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Update information for a specific user (tourist)",
+        "description" : "Update information for a specific user from system",
+        "operationId" : "updateInfoForUserId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "pass the search id for looking up the user that needs to be updated",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "user info updated",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "user not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Delete a specific user from system",
+        "description" : "Operation can be used when an used wants to delete his account",
+        "operationId" : "deleteUserByUserId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "pass the search id for looking up the user that needs to be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "user deleted"
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "user not found"
+          }
+        }
+      }
+    },
+    "/users/login" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Connect a specific user (tourist) in application",
+        "description" : "By introducing his credentials (username and password) an user is connecting is application",
+        "operationId" : "loginUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "path",
+          "description" : "The username for login",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "path",
+          "description" : "The password for login",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "login successful"
+          },
+          "400" : {
+            "description" : "invalid username/password"
+          }
+        }
+      }
+    },
+    "/users/logout" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Disconnect a specific user (tourist) from application",
+        "description" : "An user is disconnected from application",
+        "operationId" : "logoutUser",
+        "produces" : [ "application/xml" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "lougout successful"
+          }
+        }
+      }
+    },
+    "/itineraries" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "get a list of all itineraries for a specific user",
+        "description" : "See all itineraries for a specific user",
+        "operationId" : "getAllItineraries",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "an array with itineraries",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Itinerary"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "tourists" ],
+        "summary" : "adds a new itinerary for a specific user",
+        "description" : "Used when an user wants to add plan a new itinerary",
+        "operationId" : "addItinerary",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "itineraryItem",
+          "description" : "Itinerary item to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Itinerary"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "itinerary added"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing itinerary already"
+          }
+        }
+      }
+    },
+    "/itineraries/{itineraryId}" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Info for a specific itinerary",
+        "description" : "Shows information for a specific itinerary for a specific user",
+        "operationId" : "showItineraryById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "itineraryId",
+          "in" : "path",
+          "description" : "pass an optional search id for looking up itineraries",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "$ref" : "#/definitions/Itinerary"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "itinerary not found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Update information for a specific itinerary",
+        "description" : "An user can update informations for a specific itinerary",
+        "operationId" : "updateInfoForItinerary",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "itineraryId",
+          "in" : "path",
+          "description" : "pass an optional search id for looking up itinerary",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "itinerary info updated",
+            "schema" : {
+              "$ref" : "#/definitions/Itinerary"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "itinerary not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Delete a specific itinerary from system",
+        "description" : "Operation can be used when an used wants to delete one of his itineraries",
+        "operationId" : "deleteItineraryById",
+        "produces" : [ "application/jspn" ],
+        "parameters" : [ {
+          "name" : "itineraryId",
+          "in" : "path",
+          "description" : "pass a search id for looking up the itinerary which should be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "itinerary deleted"
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "itinerary not found"
+          }
+        }
+      }
+    },
+    "/accomodations" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Display all available hotels",
+        "description" : "Shows information for all available places",
+        "operationId" : "getAllAccomodations",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "place",
+          "in" : "query",
+          "description" : "filter the hotels from a specific place",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "price",
+          "in" : "query",
+          "description" : "an upper bound for hotel price",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "hotelName",
+          "in" : "query",
+          "description" : "filter the hotels with the specified name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "starsNumber",
+          "in" : "query",
+          "description" : "filter the hotels with a specific comfort rate",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 5,
+          "minimum" : 1
+        }, {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Results regarding all available accomodations from a specific place, with a specific price or comfort rate",
+            "schema" : {
+              "$ref" : "#/definitions/Accomodation"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "hotels not found for specified criterias"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "adds an hotel in database",
+        "description" : "Adds a new hotel to the system",
+        "operationId" : "addAccomodation",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "accomodationItem",
+          "description" : "Accomodation item to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Accomodation"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "accomodation added"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing accomodation already"
+          }
+        }
+      }
+    },
+    "/accomodations/{accomodationId}" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Info for a specific accomodation",
+        "description" : "Shows information abouta specific accomodation",
+        "operationId" : "showAccomodationById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accomodationId",
+          "in" : "path",
+          "description" : "pass the search id for looking up accomodations",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "$ref" : "#/definitions/Accomodation"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "accomodation not found"
+          }
+        }
+      }
+    },
+    "/restaurants" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Display all available restaurants",
+        "description" : "Shows information for all available restaurants matching specified criterias",
+        "operationId" : "getRestaurants",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "place",
+          "in" : "query",
+          "description" : "filter the restaurants from a specific place",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "restaurantName",
+          "in" : "query",
+          "description" : "filter the restaurants with the specified name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Results regarding all available accomodations from a specific place, with a specific price or comfort rate",
+            "schema" : {
+              "$ref" : "#/definitions/Restaurant"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "restaurants not found for specified criterias"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "adds a restaurant in system",
+        "description" : "Adds a new restaurant to the system",
+        "operationId" : "addRestaurant",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "restaurantItem",
+          "description" : "Restaurant item to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Restaurant"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "restaurant added"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing restaurant already exists"
+          }
+        }
+      }
+    },
+    "/restaurant/{restaurantId}" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Info for a specific restaurant",
+        "description" : "Shows information about a specific restaurant",
+        "operationId" : "showRestaurantById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "restaurantId",
+          "in" : "path",
+          "description" : "pass the search id for looking up restaurants",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "$ref" : "#/definitions/Restaurant"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "restaurant not found"
+          }
+        }
+      }
+    },
+    "/touristicObjectives" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Display all available touristic objectives matching specified criterias",
+        "description" : "Shows information for all available touristic objectives that match some criterias",
+        "operationId" : "getTouristicObjectives",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "place",
+          "in" : "query",
+          "description" : "filter the touristic objectives from a specific place",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "objectiveName",
+          "in" : "query",
+          "description" : "filter the touristic attractions with the specified name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Results regarding all available accomodations from a specific place, with a specific price or comfort rate",
+            "schema" : {
+              "$ref" : "#/definitions/TouristicObjective"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "hotels not found for specified criterias"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "adds an touristic objective into the system",
+        "description" : "Adds a new touristic objective to the system",
+        "operationId" : "addTouristicObjective",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "objectiveItem",
+          "description" : "Touristic Objective item to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/TouristicObjective"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "touristic objective added"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing touristic objective  already exists"
+          }
+        }
+      }
+    },
+    "/touristicObjectives/{objectiveId}" : {
+      "get" : {
+        "tags" : [ "tourists" ],
+        "summary" : "Info for a specific touristic objective",
+        "description" : "Shows information about a specific touristic objective",
+        "operationId" : "showTouristicObjectiveById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "objectiveId",
+          "in" : "path",
+          "description" : "pass the search id for looking up touristic objectives",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "$ref" : "#/definitions/TouristicObjective"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "touristic objective not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "User" : {
+      "type" : "object",
+      "required" : [ "email", "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 1000
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Tuxy Pinguinescu"
+        },
+        "email" : {
+          "type" : "string",
+          "format" : "email",
+          "example" : "tuxy@uaic.ro"
+        },
+        "itineraries" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Itinerary"
+          }
+        }
+      },
+      "example" : {
+        "name" : "Tuxy Pinguinescu",
+        "itineraries" : [ {
+          "itineraryType" : "Family",
+          "route" : [ {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          }, {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          } ],
+          "endDate" : "23/11/2018",
+          "name" : "My first trip to Ceahlau",
+          "start" : {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          },
+          "destination" : {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          },
+          "id" : 2001,
+          "tourists" : [ null, null ],
+          "startDate" : "22/11/2018"
+        }, {
+          "itineraryType" : "Family",
+          "route" : [ {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          }, {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          } ],
+          "endDate" : "23/11/2018",
+          "name" : "My first trip to Ceahlau",
+          "start" : {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          },
+          "destination" : {
+            "accomodations" : [ {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            }, {
+              "price" : "100$",
+              "latitude" : "48°50'24\"N",
+              "name" : "Hôtel Quai de Seine",
+              "id" : "Q21548948",
+              "comfortRating" : 3,
+              "accomodationType" : "Hotel",
+              "longitude" : "2°20'30\"E"
+            } ],
+            "name" : "Paris",
+            "restaurants" : [ {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            }, {
+              "latitude" : "48°50'24\"N",
+              "name" : "Le Ciel de Paris",
+              "id" : "Q3221420",
+              "longitude" : "4°20'64\"N"
+            } ],
+            "id" : "Q90",
+            "touristicObjectives" : [ {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            }, {
+              "latitude" : "48°51'39.92\"N",
+              "name" : "Louvre Museum",
+              "id" : "Q19675",
+              "longitude" : "2°20'8.70\"E"
+            } ]
+          },
+          "id" : 2001,
+          "tourists" : [ null, null ],
+          "startDate" : "22/11/2018"
+        } ],
+        "id" : 1000,
+        "email" : "tuxy@uaic.ro"
+      }
+    },
+    "Itinerary" : {
+      "required" : [ "destination", "endDate", "id", "itineraryType", "name", "startDate" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 2001
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "My first trip to Ceahlau"
+        },
+        "startDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "22/11/2018"
+        },
+        "endDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "23/11/2018"
+        },
+        "itineraryType" : {
+          "type" : "string",
+          "example" : "Family",
+          "enum" : [ "Family", "Bussiness", "Adventurer", "Romantic" ]
+        },
+        "start" : {
+          "$ref" : "#/definitions/Place"
+        },
+        "destination" : {
+          "$ref" : "#/definitions/Place"
+        },
+        "route" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Place"
+          }
+        },
+        "tourists" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/User"
+          }
+        }
+      },
+      "example" : {
+        "itineraryType" : "Family",
+        "route" : [ {
+          "accomodations" : [ {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          }, {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          } ],
+          "name" : "Paris",
+          "restaurants" : [ {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          }, {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          } ],
+          "id" : "Q90",
+          "touristicObjectives" : [ {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          }, {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          } ]
+        }, {
+          "accomodations" : [ {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          }, {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          } ],
+          "name" : "Paris",
+          "restaurants" : [ {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          }, {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          } ],
+          "id" : "Q90",
+          "touristicObjectives" : [ {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          }, {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          } ]
+        } ],
+        "endDate" : "23/11/2018",
+        "name" : "My first trip to Ceahlau",
+        "start" : {
+          "accomodations" : [ {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          }, {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          } ],
+          "name" : "Paris",
+          "restaurants" : [ {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          }, {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          } ],
+          "id" : "Q90",
+          "touristicObjectives" : [ {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          }, {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          } ]
+        },
+        "destination" : {
+          "accomodations" : [ {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          }, {
+            "price" : "100$",
+            "latitude" : "48°50'24\"N",
+            "name" : "Hôtel Quai de Seine",
+            "id" : "Q21548948",
+            "comfortRating" : 3,
+            "accomodationType" : "Hotel",
+            "longitude" : "2°20'30\"E"
+          } ],
+          "name" : "Paris",
+          "restaurants" : [ {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          }, {
+            "latitude" : "48°50'24\"N",
+            "name" : "Le Ciel de Paris",
+            "id" : "Q3221420",
+            "longitude" : "4°20'64\"N"
+          } ],
+          "id" : "Q90",
+          "touristicObjectives" : [ {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          }, {
+            "latitude" : "48°51'39.92\"N",
+            "name" : "Louvre Museum",
+            "id" : "Q19675",
+            "longitude" : "2°20'8.70\"E"
+          } ]
+        },
+        "id" : 2001,
+        "tourists" : [ null, null ],
+        "startDate" : "22/11/2018"
+      }
+    },
+    "Place" : {
+      "required" : [ "accomodations", "id", "name", "restaurants", "touristicObjectives" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "Q90"
+        },
+        "name" : {
+          "type" : "string",
+          "format" : "string",
+          "example" : "Paris"
+        },
+        "touristicObjectives" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TouristicObjective"
+          }
+        },
+        "restaurants" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Restaurant"
+          }
+        },
+        "accomodations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Accomodation"
+          }
+        }
+      },
+      "example" : {
+        "accomodations" : [ {
+          "price" : "100$",
+          "latitude" : "48°50'24\"N",
+          "name" : "Hôtel Quai de Seine",
+          "id" : "Q21548948",
+          "comfortRating" : 3,
+          "accomodationType" : "Hotel",
+          "longitude" : "2°20'30\"E"
+        }, {
+          "price" : "100$",
+          "latitude" : "48°50'24\"N",
+          "name" : "Hôtel Quai de Seine",
+          "id" : "Q21548948",
+          "comfortRating" : 3,
+          "accomodationType" : "Hotel",
+          "longitude" : "2°20'30\"E"
+        } ],
+        "name" : "Paris",
+        "restaurants" : [ {
+          "latitude" : "48°50'24\"N",
+          "name" : "Le Ciel de Paris",
+          "id" : "Q3221420",
+          "longitude" : "4°20'64\"N"
+        }, {
+          "latitude" : "48°50'24\"N",
+          "name" : "Le Ciel de Paris",
+          "id" : "Q3221420",
+          "longitude" : "4°20'64\"N"
+        } ],
+        "id" : "Q90",
+        "touristicObjectives" : [ {
+          "latitude" : "48°51'39.92\"N",
+          "name" : "Louvre Museum",
+          "id" : "Q19675",
+          "longitude" : "2°20'8.70\"E"
+        }, {
+          "latitude" : "48°51'39.92\"N",
+          "name" : "Louvre Museum",
+          "id" : "Q19675",
+          "longitude" : "2°20'8.70\"E"
+        } ]
+      }
+    },
+    "TouristicObjective" : {
+      "required" : [ "id", "latitude", "longitude", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "Q19675"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Louvre Museum"
+        },
+        "latitude" : {
+          "type" : "string",
+          "example" : "48°51'39.92\"N"
+        },
+        "longitude" : {
+          "type" : "number",
+          "example" : "2°20'8.70\"E"
+        }
+      },
+      "example" : {
+        "latitude" : "48°51'39.92\"N",
+        "name" : "Louvre Museum",
+        "id" : "Q19675",
+        "longitude" : "2°20'8.70\"E"
+      }
+    },
+    "Restaurant" : {
+      "required" : [ "id", "latitude", "longitude", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "Q3221420"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Le Ciel de Paris"
+        },
+        "latitude" : {
+          "type" : "string",
+          "example" : "48°50'24\"N"
+        },
+        "longitude" : {
+          "type" : "string",
+          "example" : "4°20'64\"N"
+        }
+      },
+      "example" : {
+        "latitude" : "48°50'24\"N",
+        "name" : "Le Ciel de Paris",
+        "id" : "Q3221420",
+        "longitude" : "4°20'64\"N"
+      }
+    },
+    "Accomodation" : {
+      "required" : [ "accomodationType", "id", "latitude", "longitude", "name", "price" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "Q21548948"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Hôtel Quai de Seine"
+        },
+        "latitude" : {
+          "type" : "string",
+          "example" : "48°50'24\"N"
+        },
+        "longitude" : {
+          "type" : "string",
+          "example" : "2°20'30\"E"
+        },
+        "price" : {
+          "type" : "number",
+          "format" : "currency",
+          "example" : "100$"
+        },
+        "accomodationType" : {
+          "type" : "string",
+          "example" : "Hotel",
+          "enum" : [ "Hostel", "Hotel", "Lodge" ]
+        },
+        "comfortRating" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 3,
+          "minimum" : 1,
+          "maximum" : 5
+        }
+      },
+      "example" : {
+        "price" : "100$",
+        "latitude" : "48°50'24\"N",
+        "name" : "Hôtel Quai de Seine",
+        "id" : "Q21548948",
+        "comfortRating" : 3,
+        "accomodationType" : "Hotel",
+        "longitude" : "2°20'30\"E"
+      }
+    }
+  }
+}
