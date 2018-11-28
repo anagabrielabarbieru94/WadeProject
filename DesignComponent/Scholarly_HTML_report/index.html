@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Tourist Web Assistant using Spring Boot
+</title>
+    <link rel="stylesheet" href="public/css/scholarly.css">
+    <link rel="stylesheet" href="public/js/prismjs/themes/prism-coy.css">
+    <script src="public/js/prismjs/prism.js" defer></script>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        p {
+            text-align: justify;
+        }
+    </style>
+</head>
+<body prefix="schema: http://schema.org/ xsd: http://www.w3.org/2001/XMLSchema# sa: https://ns.science.ai/">
+<header>
+    <p class="title">       Tourist Web Assistant
+        </p>
+</header>
+<article id="what" typeof="schema:ScholarlyArticle" resource="#">
+    <h1> Developing a microservices oriented application using Spring Boot technologies</h1>
+    <section>
+        <ol>           
+            <li property="schema:contributor" typeof="sa:ContributorRole">
+                <a property="schema:contributor" href="https://github.com/anagabrielabarbieru94"
+                   typeof="schema:Person">
+                    <span property="schema:givenName">Ana - Gabriela</span>
+                    <span property="schema:familyName">Barbieru</span>
+                </a>
+			</li>
+
+			<li property="schema:contributor" typeof="sa:ContributorRole">
+                <a property="schema:contributor" href="https://github.com/Samarithan"
+                   typeof="schema:Person">
+                    <span property="schema:givenName">Alexandru</span>
+                    <span property="schema:familyName">Vasiliu</span>
+                </a>
+			</li>
+
+			<li property="schema:contributor" typeof="sa:ContributorRole">
+                <a property="schema:contributor" href="https://github.com/andabuinoschi?fbclid=IwAR3ns2V3SeTyDeao8UWGQK_AdHtLFX2iA0K4NVvNJYspQkxyly-OdIE2OOI"
+                   typeof="schema:Person">
+                    <span property="schema:givenName">Anda</span>
+                    <span property="schema:familyName">Buinoschi</span>
+                </a>
+			</li>
+        </ol>
+        <ol>
+            <li id="scienceai">
+                <a href="https://www.info.uaic.ro/bin/Main/" typeof="schema:Corporation">
+                    <span property="schema:name">Faculty of Computer Science</span>
+                </a>
+            </li>
+        </ol>
+    </section>
+
+    <section typeof="sa:Abstract" id="abstract">
+        <h2>Abstract</h2>
+        <p>
+                Towas (Tourist Web Assistant) is a responsive multi-device application developed for persons who likes to plan everything about trips or holydays.	It may be found usefull in situation like a person is stuck in an foreign location and needs food, accomodation or maybe he needs to have some fun somewhere. The application is available in multiple languages and it is capable to recommend places depending the user needs, based on the historical experience of the user correlated with semantic web technologies.<br>
+                Towas follows Microservices Oriented Achitecture and uses Java Spring Boot as base technology. It also use SparQL interrogation language to provide information about locations, places, touristic objective, restaurants or hotels.
+
+        </p>
+    </section>
+   
+    
+<section typeof="sa:Materials" id="technologies">
+        <h2>Technologies</h2>
+        <ul>
+            <li><p><a href="https://angularjs.org/">AngularJS</a> is a JavaScript based open-source front-end web application framework mainly maintained by Google and by a community of individuals and corporations. It is built on the belied that declarative programmin should be used to create user interfaces and connect software componenets, while imperative programming is better suited to define an application business logic. This framework adapts and extends traditional HTML to present dynamic content throught two-way data-binding that allows for the automatic synchronization of models and views.</p></li>
+            <li><p><a href="https://spring.io/projects/spring-boot">Spring-Boot</a> is a brand new framework, designed to simplify bootstrapping and development of a new Spring application.Spring-Boot makes it easy to create stand-alone, production-grade Spring based application that you can just run</p></li>
+            <li><p><a href="https://spring.io/">Spring Framework</a> is an application framework and inversion of control container for Java platform.The framework's core features can be used by any Java application, but there are extensions for building web application on top of the Java EE platform.</p></li>
+            <li><p><a href="https://maven.apache.org/">Apache Maven</a> is a software project management and comprehension tool. Based on the concept of a project object model (POM), Maven can manage a project's build, reporting and documentation from a central piece of information.</p></li>
+            <li><p><a href="https://spring.io/projects/spring-cloud-netflix">Spring Cloud Netflix</a> provides Netflix OSS integrations for Spring Boot apps through autoconfiguration and binding to the Spring Environment and other Spring programming model idioms. With a few simple annotations it is possible to enable and configure the common patterns inside the application and buil large distributed systems with batle-tested Netflix components.</p></li>
+            <li><p><a href="http://graphdb.ontotext.com/">GraphDB</a> is a highly-efficient and robust graph
+                database - a semantic repository that stores and manipulates RDF data along with an inference
+                engine that uses rules to infer new knowledge - and SPARQL support.</p></li>
+        </ul>
+</section>
+    <figure typeof="sa:Image">
+        <img src="public/resources/Architecture.jpg">
+        <figcaption>
+            <center> Architecture</center>
+        </figcaption>
+    </figure>
+
+    <section id="protocols">
+        
+    </section>
+
+    <section id="started">
+        <h3>Microservices Oriented Architecture </h3>
+        Microservices are the main development technique used in this application. It is a variant of service oriented architecture(SOA) style, which gives to the application loosely coupled services and fine-grained. This is very useful because decomposing the application into different smaller services, it improves modularity.This aspect helps to parallelize development, and makes the application resilient to architecture eroison. A service in Microservices Architecture (MSA) can be seen like a process that communicates over a network with other services in order to fulfill a goal using an interoperable protocol like HTTP, is independently deployable and autonomously developed and should be well organized around capabilities.<br><br>
+        In this application we use five microservices, all of them registered into Eureka Registration-Service, and discovered by a Gateway-Service Zuul throught all request are sent to each microservices.
+        <li>
+        	<p> 
+        		<strong>AccountService<br></strong>
+        		This service offers the possibility for a user to login on the application, search for last holidays planned,or for a new user to register on application and store some history information related to the past holidays. These informations can be useful in order to plan a new itinerary, based on past experience of our user. Al these informations are stored in a <a href="https://www.mysql.com/">MySQL</a> database.
+        	</p>
+        </li>
+
+        <li>
+        	<p>
+        		<strong>Itinerary Service<br></strong>
+        		This is the most important service in our application. It offers the possibility to find routes, accomodations, restaurants, touristic objectives or activities depending on some aspects asked by the client like: destination, type of the trip, start and end date, and some information from user profile like interests, user's history. This microservice will communicate with AccountService in order to get the profile of the user, and will offer recommendations using SparQL queries to a GraphDB endpoint.
+        	</p>	
+        </li>
+
+        <li>
+        	<p>
+        		<strong>AdvisorService<br></strong>
+        		This service can be very useful in case of some unexepected happenings during an itinerary. Maybe our user is too tired to reach at the next location and he needs some informations related to the nearest restaurants or hotels. Based on GPS location of the user, this service will also use the same SparQL endpoint to find the best solution which will meet user's need. It also can be used like an adviser in case of an user in a foreign city, which wants to visit as much as possible in short period of time.  
+        	</p>
+        </li>
+
+        <li>
+        	<p>
+        		<strong>ShareExperienceService<br></strong>
+        		Being a tourist assitant application, maybe our user is experiencing great moments that he wants to share to some social media friends. In this case, this service uses some Twitter and Instagram APIs such that offers the possibility to the user to share some images, videos, or thoughts regarding the best moments from the itinerary. 
+        	</p>	
+        </li>
+
+        <li>
+        	<p>
+        		<strong>TranslateService<br></strong>
+        		This service offers the functionality of translating all the pages of the application in three different languages using some translation APIs like Google Cloud Translation API.
+        	</p>
+        </li>
+	</section>
+
+	<section id="Application Data Storage">
+		<h3>Application Data Storage</h3>
+		<strong>Tourist Web Assitant</strong> uses two ways of storing data. On the one hand, it uses a classical MySQL database table for user's personal information: username, password, e-mail, prefferences, itinerary history. On the other hand, the rest of the information provided by application's microservices are offered by a SparQL endpoint containing entities like: touristic objective, accomodation, restaurant, activity, route and itinerary. All of them are saved in a graph and correlated with other entities.
+
+		<figure typeof = "sa:Image"> 
+		<img src="public/resources/RDF-SCHEMA.jpg">
+		<figcaption>
+			<center>
+				RDF Graph Prototype
+			</center>
+		</figcaption>
+		</figure>
+
+		<p>
+			The <strong>RDF Graph</strong> will be populated based on information provided by <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page">Wikidata</a> and <a href="http://linkedgeodata.org/About">Linked-Geo-Data</a> datasets. All the relations between entities and properties will be created using a "Towas" vocabulary, which will be constructed over the existent vocabularies. 
+		</p>	
+	</section>
+
+    <section id="Conclusion">
+    	<h3>Conclusions</h3>
+    	<p>
+    	TOWAS (Tourist Web Assitant) is an application destinated for those people who like traveling and need fast and dynamic information about their location and the best nearest place to be visited based on semantic web technologies. It also represents a solution for those who are in need of a food place or accomodation because the application take in consideration the updated GPS position of the user and is able to find the desired place. The application uses the experience, related stored data of the user in case of a first time using user. In this sense it can be improved with a machine learning based mechanism in order to recognize a specific profile of the user and offer recommendations based on these information too. 
+    	</p>
+    </section>
+
+    <section typeof="sa:ReferenceList" id="references">
+        <h2>References</h2>
+        	<ul>
+        		<li><a href="https://spring.io/projects/spring-boot"> Spring Boot</a>, by Pivotal Software<a></li>
+        		<li><a href="https://angular.io/"> Angular</a>, by Google<a></li>
+        		<li><a href="https://www.ontotext.com/products/graphdb/"> GraphDB</a>, by Ontotext<a></li>
+        		<li><a href="https://app.swaggerhub.com/"> SwaggerHub</a>, by SmartBear Software<a></li>
+        	</ul>
+    </section>
+</article>
+<footer>
+    <p>
+        Tourist Web Assitent  
+        •
+        <a href="https://www.info.uaic.ro/bin/Main/">
+            <img src="https://www.info.uaic.ro/skins/fii/logo_fii3.png" height="20px">
+        </a>
+        •
+        <a href="https://github.com/anagabrielabarbieru94/WadeProject">TOWAS @ GitHub</a>
+    </p>
+</footer>
+</body>
+</html>
