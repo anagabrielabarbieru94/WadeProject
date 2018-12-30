@@ -35,4 +35,9 @@ public class EurekaClientApplication implements GreetingController{
     public String greeting() {
         return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName());
     }
+
+	@Override
+	public String mainPage() {
+		return "This is AccountService main page. Welcome!";
+	}
 }

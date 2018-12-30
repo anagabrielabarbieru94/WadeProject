@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: wade.account_service.EurekaClientApplicationTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 s - in wade.account_service.EurekaClientApplicationTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s - in wade.account_service.EurekaClientApplicationTest

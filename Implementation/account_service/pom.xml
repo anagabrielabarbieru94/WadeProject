@@ -8,11 +8,10 @@
 		<version>2.1.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.in28minutes.springboot.microservice.example.currencyconversion</groupId>
-	<artifactId>spring-boot-microservice-currency-conversion</artifactId>
+	<groupId>wade</groupId>
+	<artifactId>account_service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-microservice-currency-conversion</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Account Service</name>
 
 	<properties>
 		<java.version>1.8</java.version>
