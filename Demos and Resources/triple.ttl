@@ -1,0 +1,157 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix tA: <http://www.example.com/touristAsist#> .
+
+#Class definitions
+
+tA:Itinerary 			rdf:type 				owl:Class ;
+			 			rdfs:comment 			"An itinerary proposed for user" .
+
+tA:FamilyItinerary 		rdf:type 				owl:Class ;
+				   		rdfs:subClassOf 		tA:Itinerary ;
+                   		rdfs:comment 			"An itinerary specific for a family trip" .
+
+tA:BusinessItinerary 	rdf:type 				owl:Class ;
+					 	rdfs:subClassOf 		tA:Itinerary ;
+                     	rdfs:comment 			"An itinerary specific for a business trip" .
+
+tA:AdventureItinerary   rdf:type				owl:Class ; 
+					 	rdfs:subClassOf 		tA:Itinerary ;
+                     	rdfs:comment 			"An itinerary specific for an adventure trip" . 		
+
+
+tA:Place				rdf:type 				owl:Class ;
+						geo:lat					xsd:double ;
+						geo:long 				xsd:double ;
+						rdfs:comment 			"A geographic point of interest" .
+
+tA:Accomodation 		rdf:type 				owl:Class ;
+						rdfs:comment     		"A place where a person can sleep" .
+
+tA:Restuarant			rdf:type 				owl:Class ;
+						rdfs:comment			"A place where a person can have breakfast/dinner/lunch" .
+
+tA:TouristicObjective   rdf:type 				owl:Class ;
+						rdfs:comment 			"A place of an itinerary which can be visited" .
+
+tA:Destination 			rdf:type               owl:Class ;
+						rdfs:comment            "The main point of interest in an itinerary" .
+
+tA:CulturalAttraction   rdf:type     			owl:Class ;
+						rdfs:subClassOf         tA:TouristicObjective ;
+						rdfs:comment      		"A a theatre, museum or something related to cultural acitvities" .
+ 
+tA:NaturalAttraction    rdf:type				owl:Class ;
+						rdfs:subClassOf         tA:TouristicObjective ;
+						rdfs:comment 			"A mountain, lake, seaside, forest or something related activities in nature" .
+
+tA:Activity 			rdf:type 				owl:Class ;
+						rdfs:comment 			"An activity which ca be held at a Place" .
+
+
+tA:AdventureActivity	rdf:type				 owl:Class ;
+  						owl:equivalentClass [	 a owl:Class ;
+											    owl:intersectionOf (
+											     tA:Activity
+											     _:genid01
+											   )
+											  ] .
+
+tA:CulturalActivity		rdf:type				 owl:Class ;
+  						owl:equivalentClass [	 a owl:Class ;
+											    owl:intersectionOf (
+											     tA:Activity
+											     _:genid02
+											   )
+											  ] .
+
+tA:Museum 				rdf:type				owl:Class ;
+						rdfs:subClassOf         tA:CulturalAttraction ;
+						rdfs:comment			"Museum" .
+
+tA:Theatre 				rdf:type 				owl:Class ;
+						rdfs:subClassOf 		tA:CulturalAttraction ;  
+						rdfs:comment            "Theatre" .
+
+tA:OtherCulturalAttraction rdf:type  			owl:Class ;
+						   rdfs:subClassOf      tA:CulturalAttraction ;
+						   rdfs:comment 		"Other cultural attraction of intereset" .
+
+tA:Mountain 			rdf:type 				owl:Class ;
+						rdfs:subClassOf 		tA:NaturalAttraction ;
+						rdfs:comment            "A mountain peak or region".
+
+tA:Seaside 				rdf:type 				owl:Class;
+						rdfs:subClassOf 		tA:NaturalAttraction ;
+						rdfs:comment 			"A region with sea, ocenas etc" .	
+
+tA:Lake 				rdf:type				owl:Class ;
+						rdfs:subClassOf 		tA:NaturalAttraction ;
+						rdfs:comment 			"Lake " .
+
+tA:OtherNaturalAttraction rdf:type   			owl:Class ;
+						  rdfs:subClassOf 		tA:NaturalAttraction ;
+						  rdfs:comment			"Other natural attractions ". 	
+
+#Properties
+tA:name 					rdf:type 			owl:DatatypeProperty ;
+							rdfs:domain         tA:Restaurant, tA:Accomodation, tA:TouristicObjective, tA:Activity ;
+							rdfs:range    		xsd:string ;
+							rdfs:comment        "Name of the resource"	.		
+
+tA:description				rdf:type 			owl:DatatypeProperty ;
+							rdfs:domain 		tA:Place, tA:Activity ;
+							rdfs:range 			xsd:string ;
+ 							rdfs:comment 		"Description of entity" .
+
+tA:contains					rdf:type 			owl:ObjectProperty ;
+							rdfs:domain 		tA:Destination ;
+							rdfs:range 			tA:TouristicObjective ;
+							rdfs:comment   		"Relation between a Destination and a Touristic Objective" .
+
+tA:isPartOf					rdf:type 			owl:ObjectProperty ;
+							rdfs:domain 		tA:Destination ; 
+							rdfs:range 			tA:Itinerary .
+
+tA:isLocatedAt 				rdf:type 			owl:ObjectProperty ;
+							rdfs:domain 		tA:Reastaurant, tA:Accomodation, tA:TouristicObjective, tA:Destination ;
+							rdfs:range			tA:Place ;
+							rdfs:comment 		"An entity of intereset is located at a certain geofraphic point " .
+
+tA:isContainedBy			rdf:type			owl:ObjectProperty ;
+							rdfs:domain			tA:TouristicObjective ;
+							rdfs:range 			tA:Destination ;
+							owl:inverseOf		tA:contains .
+
+tA:has						rdf:type   			owl:ObjectProperty ;
+							rdfs:domain			tA:Itinerary ;
+							rdfs:range 			tA:Destination ;
+							owl:inverseOf 		tA:isPartOf .
+
+tA:isRelatedTo				rdf:type 			owl:ObjectProperty ;
+							rdfs:domain 		tA:Activity ;
+							rdfs:range 			tA:TouristicObjective ;
+							rdfs:comment 		"An activity can be held at a touristic objective" .
+
+tA:hasActivity	 			rdf:type			owl:ObjectProperty;
+							rdfs:domain			tA:Itinerary;
+							rdfs:range			tA:Activity.
+
+tA:isHeldAt					rdf:type 			owl:ObjectProperty;
+							rdfs:domain			tA:Activity;
+							rdfs:range			tA:Place.
+
+
+#Restrictions
+_:genid01
+  a owl:Restriction ;
+  owl:someValuesFrom tA:AdventureItinerary ;
+  owl:onProperty tA:hasActivity .
+
+_:genid02
+  a owl:Restriction ;
+  owl:someValuesFrom tA:BusinessItinerary, tA:FamilyItinerary ;
+  owl:onProperty tA:hasActivity .
