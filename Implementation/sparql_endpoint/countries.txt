@@ -12,7 +12,7 @@ http://dbpedia.org/resource/Hungary
 http://dbpedia.org/resource/Hungary
 http://dbpedia.org/resource/Bulgaria
 http://dbpedia.org/resourceS/Moldova
-http://dbpedia.org/resource/Spania
+http://dbpedia.org/resource/Spain
 http://dbpedia.org/resource/Turkey
 http://dbpedia.org/resource/Egypt
 http://dbpedia.org/resource/Egypt
