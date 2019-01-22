@@ -1,11 +1,14 @@
 from SPARQLWrapper import SPARQLWrapper
 
-# We suppose that the graph is imported at the following location http://example.com/muser/
-queryString = "PREFIX muser: <http://example.com/muser#>  PREFIX rdf: " \
-              "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>  INSERT DATA{ GRAPH <http://example.com/muser> { " \
-              "muser:HipHop rdf:type muser:MusicalGenre ; muser:relatedMusicalGenre muser:TripHop, muser:RnB .}} "
+queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+queryString += "{ 	tA:Germania rdf:type tA:Country ; \n"
+queryString += "tA:name \'Germania\'; \n"
+queryString += "tA:description \'Insorita\' .\n}\n}"
 
-sparql = SPARQLWrapper("http://192.168.17.1:7200/repositories/test-muser/statements")
+print(queryString)
+sparql = SPARQLWrapper("http://192.168.1.52:7200/repositories/6666666/statements")
 sparql.method = 'POST'
 sparql.setQuery(queryString)
 sparql.query()

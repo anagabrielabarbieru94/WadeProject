@@ -188,4 +188,16 @@ tA:involve					rdf:type 			owl:ObjectProperty ;
 							owl:inverseOf       tA:isSelectedFor; 
 							rdfs:comment		"An itinerary has touristic objectives, food places and hotels".
 
+tA:hasCapital				rdf:type			owl:ObjectProperty;
+							rdfs:domain			tA:Country;
+							rdfs:range			tA:Locality;
+							rdfs:comment		"Every country has a capital".
+
+tA:isCapitalOf				rdf:type			owl:ObjectProperty;
+							rdfs:domain			tA:Locality;
+							rdfs:range 			tA:Country;
+							owl:inverseOf       tA:hasCapital;
+							rdfs:comment		"A locality can be the capital of a country". 
+
+
 
