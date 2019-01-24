@@ -26,7 +26,7 @@ def getGeoNamesHotels(city, countryCode):
         hotelNameOriginal = hotelName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "")
+            .replace(":", "").replace("-", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -54,7 +54,7 @@ def getGeoNamesHotels(city, countryCode):
         hotelNameOriginal = hotelName.replace(u"’", "").replace(u"'", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "")
+            .replace(":", "").replace("-", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -88,13 +88,67 @@ def getGeoNamesRestaurants(city, countryCode):
     print("\nRestaurants")
     g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode='REST')
     nearbyRestaurants = [r for r in g]
-    print(nearbyRestaurants)
 
     addresses = [r.address for r in nearbyRestaurants]
 
     g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode='REST')
     proximityRestaurants = [r for r in g if r.address not in addresses]
-    print(proximityRestaurants)
+
+    for restaurant in nearbyRestaurants:
+        restaurantName = restaurant.address
+        restaurantOriginalName = restaurantName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")
+        restaurantName = restaurantOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
+            .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
+            .replace(":", "").replace("-", "")
+
+        print(restaurantName)
+        restaurantLat = restaurant.lat
+        restaurantLong = restaurant.lng
+
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{ 	tA:" + restaurantName + " rdf:type tA:Restaurant ; \n"
+        queryString += "tA:name \"" + restaurantOriginalName + "\"; \n"
+        queryString += "geo:lat " + restaurantLat + " ;\n"
+        queryString += "geo:long " + restaurantLong + ";"
+        queryString += "tA:isContainedBy tA:"+city.replace(" ", "_") + ".\n"
+        queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + restaurantName +".}\n}"
+
+        print(queryString)
+        sparql = SPARQLWrapper(sparqlEndpoint)
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
+
+    for restaurant in proximityRestaurants:
+        restaurantName = restaurant.address
+        restaurantOriginalName = restaurantName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")
+        restaurantName = restaurantOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
+            .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
+            .replace(":", "").replace("-", "")
+
+        print(restaurantName)
+        restaurantLat = restaurant.lat
+        restaurantLong = restaurant.lng
+
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{ 	tA:" + restaurantName + " rdf:type tA:Restaurant ; \n"
+        queryString += "tA:name \"" + restaurantOriginalName + "\"; \n"
+        queryString += "geo:lat " + restaurantLat + " ;\n"
+        queryString += "geo:long " + restaurantLong + ";"
+        queryString += "tA:inProximityOf tA:"+city.replace(" ", "_") + ".\n"
+        queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + restaurantName +".}\n}"
+
+        print(queryString)
+        sparql = SPARQLWrapper(sparqlEndpoint)
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
 
 def getGeoNamesMuseums(city, countryCode):
     state = ""
@@ -294,8 +348,8 @@ def getGeoNamesEntertainment(city, countryCode):
     print(proximityEntertainment)
 
 
-getGeoNamesHotels("Dubai", '')
-# getGeoNamesRestaurants("Roma", 'IT')
+# getGeoNamesHotels("Dubai", '')
+# getGeoNamesRestaurants("Iași", 'RO')
 #
 # getGeoNamesMuseums("Paris", 'FR')
 # getGeoNamesTheaters("Milan", 'IT')
