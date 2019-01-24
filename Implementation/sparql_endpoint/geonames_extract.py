@@ -23,9 +23,10 @@ def getGeoNamesHotels(city, countryCode):
 
     for hotel in nearbyHotels:
         hotelName = hotel.address
-        hotelNameOriginal = hotelName.replace(u"’", "").replace(u"'", "")
+        hotelNameOriginal = hotelName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
-            .replace("!", "").replace("/", "").replace("?", "")
+            .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
+            .replace(":", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -35,11 +36,12 @@ def getGeoNamesHotels(city, countryCode):
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
         queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
-        queryString += "{ 	tA:" + hotelName.replace(" ", "_").replace(",", "") + " rdf:type tA:Accomodation ; \n"
+        queryString += "{ 	tA:" + hotelName + " rdf:type tA:Accomodation ; \n"
         queryString += "tA:name \"" + hotelNameOriginal + "\"; \n"
         queryString += "geo:lat " + hotelLat + " ;\n"
         queryString += "geo:long " + hotelLong + ";"
-        queryString += "tA:isContainedBy tA:"+city.replace(" ", "_") + ".\n}\n}"
+        queryString += "tA:isContainedBy tA:"+city.replace(" ", "_") + ".\n"
+        queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + hotelName +".}\n}"
 
         print(queryString)
         sparql = SPARQLWrapper(sparqlEndpoint)
@@ -50,8 +52,9 @@ def getGeoNamesHotels(city, countryCode):
     for hotel in proximityHotels:
         hotelName = hotel.address
         hotelNameOriginal = hotelName.replace(u"’", "").replace(u"'", "")
-        hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
-            .replace("!", "").replace("/", "").replace("?", "")
+        hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
+            .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
+            .replace(":", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -61,11 +64,12 @@ def getGeoNamesHotels(city, countryCode):
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
         queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
-        queryString += "{ 	tA:" + hotelName.replace(" ", "_").replace(",", "") + " rdf:type tA:Accomodation ; \n"
+        queryString += "{ 	tA:" + hotelName + " rdf:type tA:Accomodation ; \n"
         queryString += "tA:name \"" + hotelNameOriginal + "\"; \n"
         queryString += "geo:lat " + hotelLat + " ;\n"
         queryString += "geo:long " + hotelLong + ";"
-        queryString += "tA:inProximityOf tA:"+city.replace(" ", "_") + ".\n}\n}"
+        queryString += "tA:inProximityOf tA:"+city.replace(" ", "_") + ".\n"
+        queryString += "tA:" + city.replace(" ", "_") + " tA:addiacentTo tA:" + hotelName + ".}\n}"
 
         print(queryString)
         sparql = SPARQLWrapper(sparqlEndpoint)
@@ -290,7 +294,7 @@ def getGeoNamesEntertainment(city, countryCode):
     print(proximityEntertainment)
 
 
-getGeoNamesHotels("Berlin", 'DE')
+getGeoNamesHotels("Dubai", '')
 # getGeoNamesRestaurants("Roma", 'IT')
 #
 # getGeoNamesMuseums("Paris", 'FR')
