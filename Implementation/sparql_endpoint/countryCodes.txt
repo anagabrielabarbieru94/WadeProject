@@ -3,7 +3,7 @@ IT
 FR
 GB
 US
-AU
+AT
 CH
 DE
 NL

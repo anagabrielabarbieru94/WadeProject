@@ -1,10 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from SPARQLWrapper import SPARQLWrapper, JSON
+import geocoder
 
 def populateCountries():
     with open("countries.txt") as f:
         content = f.readlines()
         content = [line.rstrip('\n') for line in content]
         for resource in content:
+            print(resource)
             dbpedia = SPARQLWrapper("http://dbpedia.org/sparql")
             dbpedia.setQuery("""
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -39,10 +44,106 @@ def populateCountries():
             queryString += "tA:name \""+ countryName+"\"; \n"
             queryString += "tA:description \"" + abstract.replace("\"", "")+ "\" .\n}\n}"
 
-            print(queryString)
-            sparql = SPARQLWrapper("http://192.168.0.102:7200/repositories/towas/statements")
+            sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
             sparql.method = 'POST'
             sparql.setQuery(queryString)
             sparql.query()
 
-populateCountries()
+def getDescByCityDBpedia(cityName):
+    print("Pentru orasul" + cityName)
+    query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+    query += "prefix dbo: <http://dbpedia.org/ontology/>"
+    query += "prefix dbp: <http://dbpedia.org/property/>"
+    query += "prefix dbr: <http://dbpedia.org/resource/>"
+    query += "select ?abstract where {dbr:"+cityName+" dbo:abstract ?abstract.\n"
+    query += "FILTER (lang(?abstract) = 'en')}\n"
+
+    dbpedia = SPARQLWrapper("http://dbpedia.org/sparql")
+    dbpedia.setQuery(query)
+    dbpedia.setReturnFormat(JSON)
+    results = dbpedia.query().convert()
+
+    for result in results["results"]["bindings"]:
+        return result["abstract"]["value"]
+pass
+
+def populateNonCapitalCities(countryCodesPathFile):
+    with open(countryCodesPathFile) as f:
+        content = f.readlines()
+        content = [x.strip() for x in content]
+
+    g = geocoder.geonames(location= "", maxRows = 1000, country=content, featureCode = 'PPLA', key = 'valexandru')
+    count = 0
+    for row in g:
+
+        cityName = row.address
+        cityNameOriginal = cityName.replace(u"’", "").replace("'", "").replace(u"‘", "").replace(u"`", "")
+        cityName = cityNameOriginal.replace(" ","_")
+        cityLatitude = row.lat
+        cityLongitude = row.lng
+        countryName = row.country
+
+        #cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+        count += 1
+        # print("Tara " + countryName)
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{    tA:" + cityName + " rdf:type tA:Locality; \n"
+        queryString += " tA:name \'" + cityNameOriginal + "\'; \n"
+        queryString += "tA:isIncludedBy tA:" + countryName.replace(" ","_") +";\n"
+        # if cityDescription:
+        #     queryString += "tA:description \""+ cityDescription.replace("\"", "") + "\"; \n"
+        queryString += "geo:lat " + cityLatitude + "; \n"
+        queryString += "geo:long  " + cityLongitude + ". \n } \n }"
+        print(queryString)
+        print(count)
+
+        sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()       
+
+
+def populateCapitalCities(countryCodesPathFile):
+    with open(countryCodesPathFile) as f:
+        content = f.readlines()
+        content = [x.strip() for x in content]
+
+    #for countryCode in content:
+    g = geocoder.geonames(location= "", maxRows = 1000, country=content, featureCode = 'PPLC', key = 'valexandru')
+
+    for row in g:
+        #print((row.geonames_id, row.address, row.country, row.state))
+        cityName = row.address
+        cityLatitude = row.lat
+        cityLongitude = row.lng
+        countryName = row.country
+
+        #cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+        print("Pun "+cityName)
+        print("Tara " + countryName)
+
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{    tA:" + cityName.replace(" ","_") + " rdf:type tA:Locality; \n"
+        queryString += "geo:lat " + cityLatitude + "; \n"
+        queryString += "geo:long " + cityLongitude + "; \n"
+        queryString += " tA:name \'" + cityName + "\'; \n"
+        queryString += "tA:isIncludedBy tA:" + countryName.replace(" ","_") +";\n"
+        # if cityDescription:
+        #     queryString += "tA:description \""+ cityDescription.replace("\"", "")
+        queryString += "tA:isCapitalOf tA:" + countryName.replace(" ","_") +"; \n" + ".\n} \n }"
+
+        sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
+ 
+
+#populateCountries()
+populateCapitalCities("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
+populateNonCapitalCities("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
