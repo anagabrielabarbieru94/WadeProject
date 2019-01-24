@@ -35,6 +35,11 @@ tA:TouristicObjective   rdf:type 				owl:Class ;
 						geo:long 				xsd:double ;
 						rdfs:comment			"A touristic objective of interest" .
 
+tA:EntertainmentObjective   	rdf:type 				owl:Class ;
+								geo:lat					xsd:double ;
+								geo:long 				xsd:double ;
+								rdfs:comment			"A touristic objective of interest where you can have entertainment activities" .
+
 tA:NaturalAttraction    rdf:type				owl:Class ;
 						rdfs:subClassOf         tA:TouristicObjective ;
 						rdfs:comment 			"A mountain, lake, seaside, forest or something related activities in nature" .
@@ -127,24 +132,24 @@ tA:isIncludedBy				rdf:type 			owl:ObjectProperty ;
 tA:isNearBy 				rdf:type 			owl:ObjectProperty ;
 							rdfs:domain	 		tA:Locality;
 							rdfs:range  		tA:Restaurant,tA:Accomodation,tA:TouristicObjective;
-							rdfs:comment 		"A locality is near an entity if the distance is bigger than 10 km and smaller than 30 km".
+							rdfs:comment 		"An entity is nearby a locality if the entity is located in that locality".
 
 tA:inProximity				rdf:type 			owl:ObjectProperty ;
 							rdfs:domain         tA:Restaurant,tA:Accomodation,tA:TouristicObjective;
 							rdfs:range 			tA:Locality;
 							owl:inverseOf       tA:isNearBy; 
-							rdfs:comment		"An entity isin proximity of a locality if the distance is bigger than 10 km smaller than 30km".
+							rdfs:comment		"An entity is in proximity of a locality if they are located in the same region (state, county)".
 
-tA:contains 				rdf:type 			owl:ObjectProperty ;
+tA:addiacent 				rdf:type 			owl:ObjectProperty ;
 							rdfs:domain	 		tA:Locality;
 							rdfs:range  		tA:Restaurant,tA:Accomodation,tA:TouristicObjective;
-							rdfs:comment 		"A locality contains an entity if the distance is smaller than 10 km".
+							rdfs:comment 		"A locality is addiacent to an entity if they are located in the same region (state, county)".
 
 tA:isContainedBy			rdf:type 			owl:ObjectProperty ;
 							rdfs:domain         tA:Restaurant,tA:Accomodation,tA:TouristicObjective;
 							rdfs:range 			tA:Locality;
 							owl:inverseOf       tA:isNearBy; 
-							rdfs:comment		"An entity is in contained by locality if the distance is smaller than 10 km ".
+							rdfs:comment		"An entity is contained by locality if it is located in that locality ".
 
 tA:isSpecificTo    			rdf:type 			owl:ObjectProperty ;
 							rdfs:domain 		tA:CulturalActivity,tA:EntertainmentActivity ;
