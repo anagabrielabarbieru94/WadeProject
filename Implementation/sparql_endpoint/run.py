@@ -77,8 +77,8 @@ def getDescByCityDBpedia(cityName):
         return result["abstract"]["value"]
 pass
 
-def populateNonCapitalCities(countryCodesPathFile):
-    with open(countryCodesPathFile) as f:
+def populateNonCapitalCities():
+    with open("countryCodes.txt") as f:
         content = f.readlines()
         content = [x.strip() for x in content]
 
@@ -97,7 +97,6 @@ def populateNonCapitalCities(countryCodesPathFile):
         cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
 
         count += 1
-        # print("Tara " + countryName)
         queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
@@ -111,17 +110,27 @@ def populateNonCapitalCities(countryCodesPathFile):
             queryString += "tA:description \""+ cityDescription + "\"; \n"
         queryString += "geo:lat " + cityLatitude + "; \n"
         queryString += "geo:long  " + cityLongitude + ". \n } \n }"
-        print(queryString)
-        print(count)
 
         sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
         sparql.method = 'POST'
         sparql.setQuery(queryString)
-        sparql.query()       
+        sparql.query()      
+
+        # add include relationship between country and non capital city
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{    tA:" + countryName.replace(" ","_") +"  tA:include    tA:"+ cityName +". \n } \n }"
+
+        sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
 
 
-def populateCapitalCities(countryCodesPathFile):
-    with open(countryCodesPathFile) as f:
+def populateCapitalCities():
+    with open("countryCodes.txt") as f:
         content = f.readlines()
         content = [x.strip() for x in content]
 
@@ -159,8 +168,20 @@ def populateCapitalCities(countryCodesPathFile):
         sparql.method = 'POST'
         sparql.setQuery(queryString)
         sparql.query()
+
+        # add include relationship between country and non capital city
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{    tA:" + countryName.replace(" ", "_") + "  tA:hasCapital    tA:" +  cityName.replace(" ","_") + ". \n } \n }"
+
+        sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
  
 
 #populateCountries()
-#populateCapitalCities("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
-populateNonCapitalCities("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
+#populateCapitalCities()
+populateNonCapitalCities()
