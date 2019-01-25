@@ -3,7 +3,8 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 import time
 
 sparqlEndpoint = "http://192.168.0.102:7200/repositories/towas/statements"
-geonames_usernames = []
+geonames_usernames = ['anagabrielabarbieru', 'exoticpandaoo', 'gabibarbieru',
+                      'valexandru', 'ana.barbieru66', 'anabarbieru.geo1']
 
 def getAllToWasCities():
     endpoint = SPARQLWrapper("http://localhost:7200/repositories/towas")
@@ -33,18 +34,18 @@ def getAllToWasCities():
 
 def getGeoNamesHotels(city, countryCode):
     print("\nHotels")
-    g = geocoder.geonames(city, country=[countryCode], key='gabibarbieru')
+    g = geocoder.geonames(city, country=[countryCode], key='valexandru')
     state = ""
     for r in g:
         state = r.state
         break
 
-    g = geocoder.geonames(city, maxRows=100, country=[countryCode], key='anagabrielabarbieru', featureCode='HTL')
+    g = geocoder.geonames(city, maxRows=100, country=[countryCode], key='exoticpandaoo', featureCode='HTL')
     nearbyHotels = [r for r in g]
 
     addresses = [r.address for r in nearbyHotels]
 
-    g = geocoder.geonames(state, maxRows=100, country=[countryCode], key='ana.barbieru66', featureCode='HTL')
+    g = geocoder.geonames(state, maxRows=100, country=[countryCode], key='anabarbieru.geo1', featureCode='HTL')
     proximityHotels = [r for r in g if r.address not in addresses]
 
     for hotel in nearbyHotels:
@@ -53,7 +54,7 @@ def getGeoNamesHotels(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "").replace("®", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -71,10 +72,13 @@ def getGeoNamesHotels(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + hotelName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 
     for hotel in proximityHotels:
@@ -83,7 +87,7 @@ def getGeoNamesHotels(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "").replace("®", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -101,10 +105,13 @@ def getGeoNamesHotels(city, countryCode):
         queryString += "tA:" + city.replace(" ", "_") + " tA:addiacentTo tA:" + hotelName + ".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 
 def getGeoNamesRestaurants(city, countryCode):
@@ -147,10 +154,13 @@ def getGeoNamesRestaurants(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + restaurantName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for restaurant in proximityRestaurants:
         restaurantName = restaurant.address
@@ -176,10 +186,13 @@ def getGeoNamesRestaurants(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + restaurantName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 def getGeoNamesMuseums(city, countryCode):
     state = ""
@@ -221,10 +234,13 @@ def getGeoNamesMuseums(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + museumName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for museum in proximityMuseums:
         museumName = museum.address
@@ -250,10 +266,13 @@ def getGeoNamesMuseums(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + museumName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 
 def getGeoNamesMonuments(city, countryCode):
@@ -300,10 +319,13 @@ def getGeoNamesMonuments(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + monumentName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for monument in proximityMonuments:
         monumentName = monument.address
@@ -329,10 +351,13 @@ def getGeoNamesMonuments(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + monumentName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 
 def getGeoNamesChurches(city, countryCode):
@@ -379,10 +404,13 @@ def getGeoNamesChurches(city, countryCode):
         queryString += "tA:" + city.replace(" ", "_") + " tA:isNearBy tA:" + churchName + ".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for church in proximityChurches:
         churchName = church.address
@@ -408,10 +436,13 @@ def getGeoNamesChurches(city, countryCode):
         queryString += "tA:" + city.replace(" ", "_") + " tA:addiacentTo tA:" + churchName + ".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 
 def getGeoNamesMountains(city, countryCode):
@@ -456,10 +487,13 @@ def getGeoNamesMountains(city, countryCode):
         queryString += "tA:" + city.replace(" ", "_") + " tA:isNearBy tA:" + MountainName + ".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for Mountain in proximityMountains:
         MountainName = Mountain.address
@@ -485,10 +519,13 @@ def getGeoNamesMountains(city, countryCode):
         queryString += "tA:" + city.replace(" ", "_") + " tA:addiacentTo tA:" + MountainName + ".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 
 def getGeoNamesBeaches(city, countryCode):
@@ -535,10 +572,13 @@ def getGeoNamesBeaches(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + beachName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for beach in proximityBeaches:
         beachName = beach.address
@@ -564,10 +604,13 @@ def getGeoNamesBeaches(city, countryCode):
         queryString += "tA:" + city.replace(" ", "_") + " tA:addiacentTo tA:" + beachName + ".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 def getGeoNamesLakes(city, countryCode):
     state = ""
@@ -611,10 +654,13 @@ def getGeoNamesLakes(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + lakeName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for lake in proximityLakes:
         lakeName = lake.address
@@ -640,10 +686,13 @@ def getGeoNamesLakes(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + lakeName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 def getGeoNamesForests(city, countryCode):
     state = ""
@@ -687,10 +736,13 @@ def getGeoNamesForests(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + forestName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for forest in proximityForests:
         forestName = forest.address
@@ -716,10 +768,13 @@ def getGeoNamesForests(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + forestName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 def getGeoNamesReservations(city, countryCode):
     state = ""
@@ -763,10 +818,13 @@ def getGeoNamesReservations(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + reservationName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for reservation in proximityReservations:
         reservationName = reservation.address
@@ -792,10 +850,13 @@ def getGeoNamesReservations(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + reservationName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 def getGeoNamesEntertainment(city, countryCode):
     state = ""
@@ -839,10 +900,13 @@ def getGeoNamesEntertainment(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + entertainmentName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for entertainment in proximityEntertainment:
         entertainmentName = entertainment.address
@@ -868,10 +932,13 @@ def getGeoNamesEntertainment(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + entertainmentName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 def getGeoNamesTheaters(city, countryCode):
     state = ""
@@ -911,10 +978,13 @@ def getGeoNamesTheaters(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + theaterName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
     for theater in proximityTheaters:
         theaterName = theater.address
@@ -939,10 +1009,13 @@ def getGeoNamesTheaters(city, countryCode):
         queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + theaterName +".}\n}"
 
         print(queryString)
-        sparql = SPARQLWrapper(sparqlEndpoint)
-        sparql.method = 'POST'
-        sparql.setQuery(queryString)
-        sparql.query()
+        try:
+            sparql = SPARQLWrapper(sparqlEndpoint)
+            sparql.method = 'POST'
+            sparql.setQuery(queryString)
+            sparql.query()
+        except:
+            print("Bad query")
 
 cities = getAllToWasCities()
 print(cities)
@@ -950,8 +1023,8 @@ for city in cities:
     name = city[0]
     code = city[1]
     getGeoNamesHotels(name, code)
-    time.sleep(5)
-    # getGeoNamesRestaurants("Iași", 'RO')
+    time.sleep(6)
+    # getGeoNamesRestaurants(name, code)
     #
     # getGeoNamesMuseums("Venice", 'IT')
     #getGeoNamesTheaters("Milan", 'IT')
