@@ -83,9 +83,12 @@ def populateNonCapitalCities(countryCodesPathFile):
         cityLongitude = row.lng
         countryName = row.country
 
-        #cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+        cityDescription = None
+        cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
         count += 1
         # print("Tara " + countryName)
+
+
         queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
@@ -93,8 +96,11 @@ def populateNonCapitalCities(countryCodesPathFile):
         queryString += "{    tA:" + cityName + " rdf:type tA:Locality; \n"
         queryString += " tA:name \'" + cityNameOriginal + "\'; \n"
         queryString += "tA:isIncludedBy tA:" + countryName.replace(" ","_") +";\n"
-        # if cityDescription:
-        #     queryString += "tA:description \""+ cityDescription.replace("\"", "") + "\"; \n"
+        if cityDescription is not None:
+            cityDescription = cityDescription.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "").replace(u"´", " ")
+            cityDescription = cityDescription.replace("\"", "").replace(u"ˈ", " ").replace(u"'", " ").replace( "\n", " ")
+
+            queryString += "tA:description \"" + cityDescription + "\"; \n"
         queryString += "geo:lat " + cityLatitude + "; \n"
         queryString += "geo:long  " + cityLongitude + ". \n } \n }"
         print(queryString)
@@ -120,8 +126,8 @@ def populateCapitalCities(countryCodesPathFile):
         cityLatitude = row.lat
         cityLongitude = row.lng
         countryName = row.country
-
-        #cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+        cityDescription = None
+        cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
         print("Pun "+cityName)
         print("Tara " + countryName)
 
@@ -134,10 +140,15 @@ def populateCapitalCities(countryCodesPathFile):
         queryString += "geo:long " + cityLongitude + "; \n"
         queryString += " tA:name \'" + cityName + "\'; \n"
         queryString += "tA:isIncludedBy tA:" + countryName.replace(" ","_") +";\n"
-        # if cityDescription:
-        #     queryString += "tA:description \""+ cityDescription.replace("\"", "")
+
+        if cityDescription is not None:
+            cityDescription = cityDescription.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "").replace(u"´", " ")
+            cityDescription = cityDescription.replace("\"", "").replace(u"ˈ", " ").replace(u"'", " ").replace("\n", " ")
+
+            queryString += "tA:description \"" + cityDescription + "\"; \n"
         queryString += "tA:isCapitalOf tA:" + countryName.replace(" ","_") +"; \n" + ".\n} \n }"
 
+        print(queryString)
         sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
         sparql.method = 'POST'
         sparql.setQuery(queryString)
@@ -145,5 +156,5 @@ def populateCapitalCities(countryCodesPathFile):
  
 
 #populateCountries()
-populateCapitalCities("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
-populateNonCapitalCities("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
+#populateCapitalCities("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
+populateNonCapitalCities("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
