@@ -1,8 +1,35 @@
 import geocoder
-from SPARQLWrapper import SPARQLWrapper
+from SPARQLWrapper import SPARQLWrapper, JSON
+import time
 
 sparqlEndpoint = "http://192.168.0.102:7200/repositories/towas/statements"
+geonames_usernames = []
 
+def getAllToWasCities():
+    endpoint = SPARQLWrapper("http://localhost:7200/repositories/towas")
+    endpoint.method = 'GET'
+    endpoint.setQuery("""
+                    prefix tA: <http://www.example.com/touristAsist#> \n
+                    prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n
+                    select ?name ?code WHERE\n
+                    {\n
+                        ?city rdf:type tA:Locality;\n
+                              tA:name ?name;\n
+                              tA:isIncludedBy ?country.\n
+                        ?country tA:hasCode ?code.\n
+                    }\n
+                    LIMIT 700\n
+                """)
+
+    endpoint.setReturnFormat(JSON)
+    results = endpoint.query().convert()
+    citiesList = []
+
+    for result in results["results"]["bindings"]:
+        cityName = result.get("name").get("value")
+        countryCode = result.get("code").get("value")
+        citiesList.append((cityName, countryCode))
+    return citiesList
 
 def getGeoNamesHotels(city, countryCode):
     print("\nHotels")
@@ -12,14 +39,13 @@ def getGeoNamesHotels(city, countryCode):
         state = r.state
         break
 
-    g = geocoder.geonames(city, maxRows=100, country=[countryCode], key='gabibarbieru', featureCode='HTL')
+    g = geocoder.geonames(city, maxRows=100, country=[countryCode], key='anagabrielabarbieru', featureCode='HTL')
     nearbyHotels = [r for r in g]
 
     addresses = [r.address for r in nearbyHotels]
 
-    g = geocoder.geonames(state, maxRows=100, country=[countryCode], key='gabibarbieru', featureCode='HTL')
+    g = geocoder.geonames(state, maxRows=100, country=[countryCode], key='ana.barbieru66', featureCode='HTL')
     proximityHotels = [r for r in g if r.address not in addresses]
-    print(proximityHotels)
 
     for hotel in nearbyHotels:
         hotelName = hotel.address
@@ -27,7 +53,7 @@ def getGeoNamesHotels(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -50,13 +76,14 @@ def getGeoNamesHotels(city, countryCode):
         sparql.setQuery(queryString)
         sparql.query()
 
+
     for hotel in proximityHotels:
         hotelName = hotel.address
         hotelNameOriginal = hotelName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")\
             .replace(u"´", " ").replace("\"", "")
         hotelName = hotelNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(hotelName)
         hotelLat = hotel.lat
@@ -102,7 +129,7 @@ def getGeoNamesRestaurants(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         restaurantName = restaurantOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(restaurantName)
         restaurantLat = restaurant.lat
@@ -131,7 +158,7 @@ def getGeoNamesRestaurants(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         restaurantName = restaurantOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(restaurantName)
         restaurantLat = restaurant.lat
@@ -176,7 +203,7 @@ def getGeoNamesMuseums(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         museumName = museumOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(museumName)
         museumLat = museum.lat
@@ -205,7 +232,7 @@ def getGeoNamesMuseums(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         museumName = museumOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(museumName)
         museumLat = museum.lat
@@ -255,7 +282,7 @@ def getGeoNamesMonuments(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         monumentName = monumentOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(monumentName)
         monumentLat = monument.lat
@@ -284,7 +311,7 @@ def getGeoNamesMonuments(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         monumentName = monumentOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(monumentName)
         monumentLat = monument.lat
@@ -334,7 +361,7 @@ def getGeoNamesChurches(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         churchName = churchOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(churchName)
         churchLat = church.lat
@@ -363,7 +390,7 @@ def getGeoNamesChurches(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         churchName = churchOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         #print(churchName)
         churchLat = church.lat
@@ -411,7 +438,7 @@ def getGeoNamesMountains(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         MountainName = MountainOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(MountainName)
         MountainLat = Mountain.lat
@@ -440,7 +467,7 @@ def getGeoNamesMountains(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         MountainName = MountainOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(MountainName)
         MountainLat = Mountain.lat
@@ -490,7 +517,7 @@ def getGeoNamesBeaches(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         beachName = beachNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(beachName)
         beachLat = beach.lat
@@ -519,7 +546,7 @@ def getGeoNamesBeaches(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         beachName = beachNameOriginal.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "") \
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "") \
-            .replace(":", "").replace("-", "")
+            .replace(":", "").replace("-", "").replace("–", "_").replace("+", "")
 
         print(beachName)
         beachLat = beach.lat
@@ -566,7 +593,7 @@ def getGeoNamesLakes(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         lakeName = lakeOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("–", "_").replace("+", "")
 
         print(lakeName)
         lakeLat = lake.lat
@@ -595,7 +622,7 @@ def getGeoNamesLakes(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         lakeName = lakeOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("–", "_").replace("+", "")
 
         print(lakeName)
         lakeLat = lake.lat
@@ -642,7 +669,7 @@ def getGeoNamesForests(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         forestName = forestOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("–", "_").replace("+", "")
 
         print(forestName)
         forestLat = forest.lat
@@ -671,7 +698,7 @@ def getGeoNamesForests(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         forestName = forestOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("–", "_").replace("+", "")
 
         print(forestName)
         forestLat = forest.lat
@@ -718,7 +745,7 @@ def getGeoNamesReservations(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         reservationName = reservationOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(reservationName)
         reservationLat = reservation.lat
@@ -747,7 +774,7 @@ def getGeoNamesReservations(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         reservationName = reservationOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(reservationName)
         reservationLat = reservation.lat
@@ -794,7 +821,7 @@ def getGeoNamesEntertainment(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         entertainmentName = entertainmentOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(entertainmentName)
         entertainmentLat = entertainment.lat
@@ -823,7 +850,7 @@ def getGeoNamesEntertainment(city, countryCode):
             .replace(u"´", " ").replace("\"", "")
         entertainmentName = entertainmentOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
             .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
-            .replace(":", "").replace("-", "_").replace("–", "_")
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
 
         print(entertainmentName)
         entertainmentLat = entertainment.lat
@@ -846,19 +873,94 @@ def getGeoNamesEntertainment(city, countryCode):
         sparql.setQuery(queryString)
         sparql.query()
 
+def getGeoNamesTheaters(city, countryCode):
+    state = ""
+    g = geocoder.geonames(city, country=[countryCode], key='anagabrielabarbieru')
+    state = ""
+    for r in g:
+        state = r.state
+        break
+    print("\nTheaters")
+    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode=['THTR', 'OPRA'])
+    nearbyTheaters = [r for r in g]
 
+    addresses = [r.address for r in nearbyTheaters]
+    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='ana.barbieru66', featureCode=['THTR', 'OPRA'])
+    proximityTheaters = [r for r in g if r.address not in addresses]
 
-# getGeoNamesHotels("Dubai", '')
-# getGeoNamesRestaurants("Iași", 'RO')
-#
-# getGeoNamesMuseums("Venice", 'IT')
-# getGeoNamesTheaters("Milan", 'IT')
-# getGeoNamesMonuments("Sibiu", 'RO')
-# getGeoNamesChurches("Iași", 'RO')
-#
-# getGeoNamesMountains('Suceava', 'RO')
-# getGeoNamesBeaches("Crete", 'GR')
-# getGeoNamesLakes("Roma", "IT")
-# getGeoNamesForests("Torino", 'IT')
-# getGeoNamesReservations("Roma", "IT")
-# getGeoNamesEntertainment("Constanța", "RO")
+    for theater in nearbyTheaters:
+        theaterName = theater.address
+        theaterOriginalName = theaterName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")\
+            .replace(u"´", " ").replace("\"", "")
+        theaterName = theaterOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
+            .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
+
+        theaterLat = theater.lat
+        theaterLong = theater.lng
+
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{ 	tA:" + theaterName + " rdf:type tA:Theatre ; \n"
+        queryString += "tA:name \"" + theaterOriginalName + "\"; \n"
+        queryString += "geo:lat " + theaterLat + " ;\n"
+        queryString += "geo:long " + theaterLong + ";\n"
+        queryString += "tA:isContainedBy tA:"+city.replace(" ", "_") + ".\n"
+        queryString += "tA:" +city.replace(" ", "_")+ " tA:isNearBy tA:" + theaterName +".}\n}"
+
+        print(queryString)
+        sparql = SPARQLWrapper(sparqlEndpoint)
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
+
+    for theater in proximityTheaters:
+        theaterName = theater.address
+        theaterOriginalName = theaterName.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")\
+            .replace(u"´", " ").replace("\"", "")
+        theaterName = theaterOriginalName.replace(" ", "_").replace(",", "").replace("&", "").replace("*", "")\
+            .replace("!", "").replace("/", "").replace("?", "").replace("(", "").replace(")", "").replace(".", "")\
+            .replace(":", "").replace("-", "_").replace("–", "_").replace("+", "")
+
+        theaterLat = theater.lat
+        theaterLong = theater.lng
+
+        queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+        queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+        queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
+        queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+        queryString += "{ 	tA:" + theaterName + " rdf:type tA:Theatre ; \n"
+        queryString += "tA:name \"" + theaterOriginalName + "\"; \n"
+        queryString += "geo:lat " + theaterLat + " ;\n"
+        queryString += "geo:long " + theaterLong + ";\n"
+        queryString += "tA:inProximityOf tA:"+city.replace(" ", "_") + ".\n"
+        queryString += "tA:" +city.replace(" ", "_")+ " tA:addiacentTo tA:" + theaterName +".}\n}"
+
+        print(queryString)
+        sparql = SPARQLWrapper(sparqlEndpoint)
+        sparql.method = 'POST'
+        sparql.setQuery(queryString)
+        sparql.query()
+
+cities = getAllToWasCities()
+print(cities)
+for city in cities:
+    name = city[0]
+    code = city[1]
+    getGeoNamesHotels(name, code)
+    time.sleep(5)
+    # getGeoNamesRestaurants("Iași", 'RO')
+    #
+    # getGeoNamesMuseums("Venice", 'IT')
+    #getGeoNamesTheaters("Milan", 'IT')
+    # getGeoNamesMonuments("Sibiu", 'RO')
+    # getGeoNamesChurches("Iași", 'RO')
+    #
+    # getGeoNamesMountains('Suceava', 'RO')
+    # getGeoNamesBeaches("Crete", 'GR')
+    # getGeoNamesLakes("Roma", "IT")
+    # getGeoNamesForests("Torino", 'IT')
+    # getGeoNamesReservations("Roma", "IT")
+    # getGeoNamesEntertainment("Constanța", "RO")

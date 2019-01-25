@@ -4,6 +4,7 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 import geocoder
 
+
 def populateCountries():
     with open("countries.txt") as f:
         content = f.readlines()
@@ -92,7 +93,9 @@ def populateNonCapitalCities(countryCodesPathFile):
         cityLongitude = row.lng
         countryName = row.country
 
-        #cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+        cityDescription = None
+        cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+
         count += 1
         # print("Tara " + countryName)
         queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
@@ -102,8 +105,10 @@ def populateNonCapitalCities(countryCodesPathFile):
         queryString += "{    tA:" + cityName + " rdf:type tA:Locality; \n"
         queryString += " tA:name \'" + cityNameOriginal + "\'; \n"
         queryString += "tA:isIncludedBy tA:" + countryName.replace(" ","_") +";\n"
-        # if cityDescription:
-        #     queryString += "tA:description \""+ cityDescription.replace("\"", "") + "\"; \n"
+        if cityDescription is not None:
+            cityDescription = cityDescription.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")\
+                .replace(u"´", " ").replace("\"", " ").replace("\n", " ")
+            queryString += "tA:description \""+ cityDescription + "\"; \n"
         queryString += "geo:lat " + cityLatitude + "; \n"
         queryString += "geo:long  " + cityLongitude + ". \n } \n }"
         print(queryString)
@@ -130,7 +135,8 @@ def populateCapitalCities(countryCodesPathFile):
         cityLongitude = row.lng
         countryName = row.country
 
-        #cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
+        cityDescription = None
+        cityDescription = getDescByCityDBpedia(cityName.replace(" ","_"))
         print("Pun "+cityName)
         print("Tara " + countryName)
 
@@ -143,8 +149,10 @@ def populateCapitalCities(countryCodesPathFile):
         queryString += "geo:long " + cityLongitude + "; \n"
         queryString += " tA:name \'" + cityName + "\'; \n"
         queryString += "tA:isIncludedBy tA:" + countryName.replace(" ","_") +";\n"
-        # if cityDescription:
-        #     queryString += "tA:description \""+ cityDescription.replace("\"", "")
+        if cityDescription is not None:
+            cityDescription = cityDescription.replace(u"’", "").replace(u"'", "").replace(u"‘", "").replace(u"`", "")\
+                .replace(u"´", " ").replace("\"", " ").replace("\n", " ")
+            queryString += "tA:description \"" + cityDescription + "\"; \n"
         queryString += "tA:isCapitalOf tA:" + countryName.replace(" ","_") +"; \n" + ".\n} \n }"
 
         sparql = SPARQLWrapper("http://localhost:7200/repositories/towas/statements")
@@ -153,6 +161,6 @@ def populateCapitalCities(countryCodesPathFile):
         sparql.query()
  
 
-populateCountries()
-# populateCapitalCities("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
-# populateNonCapitalCities("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
+#populateCountries()
+#populateCapitalCities("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
+populateNonCapitalCities("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\countryCodes.txt")
