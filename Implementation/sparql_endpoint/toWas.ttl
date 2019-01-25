@@ -112,6 +112,13 @@ tA:name 					rdf:type 			owl:DatatypeProperty ;
 							rdfs:range    		xsd:string ;
 							rdfs:comment        "Name of the resource".		
 
+
+tA:hasCode					rdf:type 			owl:DatatypeProperty ;
+							rdfs:domain 		tA:Country ;
+							rdfs:range 			xsd:String;
+							rdfs:comment		"Every country has a country code which identifies unique" .
+
+							
 tA:description				rdf:type 			owl:DatatypeProperty ;
 							rdfs:domain 		tA:Restaurant, tA:Accomodation, tA:TouristicObjective, tA:Activity, tA:Country, tA:Locality, tA:Itinerary ;
 							rdfs:range 			xsd:string ;
@@ -204,6 +211,4 @@ tA:isCapitalOf				rdf:type			owl:ObjectProperty;
 							rdfs:range 			tA:Country;
 							owl:inverseOf       tA:hasCapital;
 							rdfs:comment		"A locality can be the capital of a country".
-
-
 

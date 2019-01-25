@@ -4,7 +4,7 @@ FR
 GB
 US
 AT
-CH
+SZ
 DE
 NL
 CZ
@@ -22,6 +22,6 @@ PL
 DK
 NO
 FI
-GR
 SW
 IC
+GR
