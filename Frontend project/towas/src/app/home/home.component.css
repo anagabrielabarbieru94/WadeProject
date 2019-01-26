@@ -1,0 +1,21 @@
+.form-signin{
+    margin: 0 auto;
+    width: 500px;
+}
+
+.sign-up{
+    margin-top: 5px;
+    margin-left: 37%;
+}
+
+.mb-3{
+    margin-left: 25%;
+}
+
+.form-control{
+    margin-top: 5px;
+}
+
+.btn-block{
+    margin-top: 5px;
+}
