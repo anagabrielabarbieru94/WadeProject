@@ -15,11 +15,11 @@ public class ItineraryController {
 	protected ItineraryService itineraryService;
 	
 	@RequestMapping("/showCountries")
-	public String findAllCountries()
+	public List<Country>  findAllCountries()
 	{
 		List<Country> countries = itineraryService.getAllCountries();
 		
-		//return countries.get(0).getName();
-		return "Done";
+		return countries;
+		//return "Done";
 	}
 }

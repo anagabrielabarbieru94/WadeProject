@@ -14,6 +14,7 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.util.FileManager;
 import org.springframework.stereotype.Service;
 
@@ -30,30 +31,37 @@ public class ItineraryService {
 		pss.setNsPrefix("owl","http://www.w3.org/2002/07/owl#");
 		pss.setNsPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 		pss.setNsPrefix("tA", "http://www.example.com/touristAsist#");
+		
 		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>";
 		queryString += "select ?countryName where { \n";
 		queryString += "?country rdf:type tA:Country; \n tA:name ?countryName . }";
-		Model model = FileManager.get().loadModel("E:\\Facultate\\Master An 2\\TW\\Work\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
+		Model model = FileManager.get().loadModel("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
 		
 		pss.setCommandText(queryString);
 		System.out.println(pss.toString());
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
 		
-		  try (QueryExecution qexec = QueryExecutionFactory.create(pss.toString(),model)) {
-			    ResultSet results = qexec.execSelect() ;
-			    System.out.println(results.toString());
-//			    for ( ; results.hasNext() ; )
-//			    {
-//			    System.out.println("intra    ");
-//			      QuerySolution soln = results.nextSolution() ;
-//			      //RDFNode x = soln.get("countryName") ;       
-//			     // Resource r = soln.getResource("countryName") ; 
-//			      Literal l = soln.getLiteral("countryName") ; 
-//			      Country currentCountry = new Country();
-//			      currentCountry.setName(l.toString());
-//			      availableCountries.add(currentCountry);
-//			      System.out.println("Printez " + l.toString());
-//			    }
-		  }
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+		    ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		    System.out.println("intra    ");
+		      QuerySolution soln = results.nextSolution() ;
+		      //RDFNode x = soln.get("countryName") ;       
+		     // Resource r = soln.getResource("countryName") ; 
+		      Literal l = soln.getLiteral("countryName") ; 
+		      Country currentCountry = new Country();
+		      currentCountry.setName(l.toString());
+		      availableCountries.add(currentCountry);
+		      System.out.println("Printez " + l.toString());
+		    }
 		 
 		return availableCountries;
 	}
