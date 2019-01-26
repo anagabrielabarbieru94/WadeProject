@@ -122,12 +122,12 @@ def getGeoNamesRestaurants(city, countryCode):
         break
 
     print("\nRestaurants")
-    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode='REST')
+    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='ana.barbieru66', featureCode='REST')
     nearbyRestaurants = [r for r in g]
 
     addresses = [r.address for r in nearbyRestaurants]
 
-    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode='REST')
+    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='valexandru', featureCode='REST')
     proximityRestaurants = [r for r in g if r.address not in addresses]
 
     for restaurant in nearbyRestaurants:
@@ -196,18 +196,18 @@ def getGeoNamesRestaurants(city, countryCode):
 
 def getGeoNamesMuseums(city, countryCode):
     state = ""
-    g = geocoder.geonames(city, country=[countryCode], key='gabibarbieru')
+    g = geocoder.geonames(city, country=[countryCode], key='exoticpandaoo')
     for r in g:
         state = r.state
         break
 
     print("\nMuseums")
-    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode='MUS')
+    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='anagabrielabarbieru', featureCode='MUS')
     nearbyMuseums = [r for r in g]
 
     addresses = [r.address for r in nearbyMuseums]
 
-    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode='MUS')
+    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='anabarbieru.geo1', featureCode='MUS')
     proximityMuseums = [r for r in g if r.address not in addresses]
 
     for museum in nearbyMuseums:
@@ -277,20 +277,20 @@ def getGeoNamesMuseums(city, countryCode):
 
 def getGeoNamesMonuments(city, countryCode):
     state = ""
-    g = geocoder.geonames(city, country=[countryCode], key='valexandru')
+    g = geocoder.geonames(city, country=[countryCode], key='anabarbieru.geo1')
     for r in g:
         state = r.state
         break
 
     print("\nMonuments")
-    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='valexandru',
+    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='exoticpandaoo',
                           featureCode=['MNMT', 'PYR', 'CSTL', 'PAL'])
     nearbyMonuments = [r for r in g]
     print(nearbyMonuments)
 
     addresses = [r.address for r in nearbyMonuments]
 
-    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='valexandru',
+    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='anagabrielabarbieru',
                           featureCode=['MNMT', 'PYR', 'CSTL', 'PAL'])
     proximityMonuments = [r for r in g if r.address not in addresses]
     print(proximityMonuments)
@@ -368,14 +368,14 @@ def getGeoNamesChurches(city, countryCode):
         break
 
     print("\nChurches")
-    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='valexandru',
+    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='gabibarbieru',
                           featureCode=['CH', 'MSTY', 'MSQE', 'TMPL'])
     nearbyChurches = [r for r in g]
     print(nearbyChurches)
 
     addresses = [r.address for r in nearbyChurches]
 
-    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='valexandru',
+    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='ana.barbieru66',
                           featureCode=['CH', 'MSTY', 'MSQE', 'TMPL'])
     proximityChurches = [r for r in g if r.address not in addresses]
 
@@ -453,13 +453,13 @@ def getGeoNamesMountains(city, countryCode):
         break
 
     print("\nMountains")
-    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='gabibarbieru', featureCode=['MT', 'MTS', 'PK', 'PKS'])
+    g = geocoder.geonames(city, maxRows=1000, country=[countryCode], key='valexandru', featureCode=['MT', 'MTS', 'PK', 'PKS'])
     nearbyMountains = [r for r in g]
     print(nearbyMountains)
 
     addresses = [r.address for r in nearbyMountains]
 
-    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='gabibarbieru',
+    g = geocoder.geonames(state, maxRows=1000, country=[countryCode], key='anagabrielabarbieru',
                           featureCode=['MT', 'MTS', 'PK', 'PKS'])
     proximityMountains = [r for r in g if r.address not in addresses]
     print(proximityMountains)
@@ -479,7 +479,7 @@ def getGeoNamesMountains(city, countryCode):
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
         queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
-        queryString += "{   tA:" + MountainName + " rdf:type tA:OtherCulturalAttraction ; \n"
+        queryString += "{   tA:" + MountainName + " rdf:type tA:Mountain ; \n"
         queryString += "tA:name \"" + MountainOriginalName + "\"; \n"
         queryString += "geo:lat " + MountainLat + " ;\n"
         queryString += "geo:long " + MountainLong + ";\n"
@@ -511,7 +511,7 @@ def getGeoNamesMountains(city, countryCode):
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
         queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
-        queryString += "{   tA:" + MountainName + " rdf:type tA:OtherCulturalAttraction ; \n"
+        queryString += "{   tA:" + MountainName + " rdf:type tA:Mountain ; \n"
         queryString += "tA:name \"" + MountainOriginalName + "\"; \n"
         queryString += "geo:lat " + MountainLat + " ;\n"
         queryString += "geo:long " + MountainLong + ";\n"
@@ -564,7 +564,7 @@ def getGeoNamesBeaches(city, countryCode):
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
         queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
-        queryString += "{   tA:" + beachName + " rdf:type tA:Accomodation ; \n"
+        queryString += "{   tA:" + beachName + " rdf:type tA:Seaside ; \n"
         queryString += "tA:name \"" + beachNameOriginal + "\"; \n"
         queryString += "geo:lat " + beachLat + " ;\n"
         queryString += "geo:long " + beachLong + ";"
@@ -596,7 +596,7 @@ def getGeoNamesBeaches(city, countryCode):
         queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
         queryString += "prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n"
         queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
-        queryString += "{   tA:" + beachName + " rdf:type tA:Accomodation ; \n"
+        queryString += "{   tA:" + beachName + " rdf:type tA:Seaside ; \n"
         queryString += "tA:name \"" + beachNameOriginal + "\"; \n"
         queryString += "geo:lat " + beachLat + " ;\n"
         queryString += "geo:long " + beachLong + ";"
@@ -942,7 +942,7 @@ def getGeoNamesEntertainment(city, countryCode):
 
 def getGeoNamesTheaters(city, countryCode):
     state = ""
-    g = geocoder.geonames(city, country=[countryCode], key='anagabrielabarbieru')
+    g = geocoder.geonames(city, country=[countryCode], key='valexandru')
     state = ""
     for r in g:
         state = r.state
@@ -1022,16 +1022,21 @@ print(cities)
 for city in cities:
     name = city[0]
     code = city[1]
-    getGeoNamesHotels(name, code)
-    time.sleep(6)
+    # getGeoNamesHotels(name, code)
+    # time.sleep(6)
     # getGeoNamesRestaurants(name, code)
+    # time.sleep(6)
+    # getGeoNamesMuseums(name, code)
+    # time.sleep(6)
+    # getGeoNamesTheaters(name, code)
+    # time.sleep(6)
+    # getGeoNamesMonuments(name, code)
+    # time.sleep(6)
+    # getGeoNamesChurches(name, code)
+    # time.sleep(6)
     #
-    # getGeoNamesMuseums("Venice", 'IT')
-    #getGeoNamesTheaters("Milan", 'IT')
-    # getGeoNamesMonuments("Sibiu", 'RO')
-    # getGeoNamesChurches("Iași", 'RO')
-    #
-    # getGeoNamesMountains('Suceava', 'RO')
+    getGeoNamesMountains(name, code)
+    time.sleep(6)
     # getGeoNamesBeaches("Crete", 'GR')
     # getGeoNamesLakes("Roma", "IT")
     # getGeoNamesForests("Torino", 'IT')
