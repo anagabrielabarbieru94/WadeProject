@@ -23,6 +23,7 @@ import wade.model.Country;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
+import wade.model.Museum;
 import wade.model.Restaurant;
 import wade.model.Seaside;
 
@@ -234,6 +235,118 @@ public class ItineraryService {
 		return accomodationList;
 	}
 	
+	public List<Accomodation> getAccomodationsInProximity(String localityName){
+		List<Accomodation> cityAccomodations = new ArrayList<>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?hotelName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Accomodation; \n tA:name ?hotelName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal h = soln.getLiteral("hotelName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      Accomodation accomodation = new Accomodation();
+		      accomodation.setName(h.getString());
+		      accomodation.setLatitude(lat.getDouble());
+		      accomodation.setLongitude(lng.getDouble());
+		      accomodation.setInProximityOf(c.toString());
+		      
+		      cityAccomodations.add(accomodation);
+		      System.out.println("Printez " + h.toString());
+		    }
+		    
+		return cityAccomodations;
+	}
+	
+	public List<Accomodation> getAllAccomodationsAroundCity(String localityName){
+		List<Accomodation> cityAccomodations = new ArrayList<>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString+="select * { \n { \n";
+		
+		//get proximity hotels
+		queryString += "select ?hotelName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Accomodation; \n tA:name ?hotelName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		
+		queryString += "}\n UNION \n {\n";
+		
+		//get nearby hotels
+		queryString += "select ?hotelName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Accomodation; \n tA:name ?hotelName; \n";
+		queryString += " tA:isContainedBy ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		queryString += "}\n}\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal h = soln.getLiteral("hotelName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      Accomodation accomodation = new Accomodation();
+		      accomodation.setName(h.getString());
+		      accomodation.setLatitude(lat.getDouble());
+		      accomodation.setLongitude(lng.getDouble());
+		      accomodation.setIsContainedBy(c.toString());
+		      
+		      cityAccomodations.add(accomodation);
+		      System.out.println("Printez " + h.toString());
+		    }
+		    
+		return cityAccomodations;
+	}
+	
 	public List<Restaurant> getRestaurantsNearByLocality(String localityName)
 	{
 		List<Restaurant> restaurantList = new ArrayList<Restaurant>();
@@ -266,6 +379,155 @@ public class ItineraryService {
 	      restaurantList.add(restaurant);
 	    }
 		return restaurantList;
+	}
+	
+	public List<Restaurant> getRestaurantsInProximity(String localityName){
+		List<Restaurant> cityRestaurants = new ArrayList<>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?restaurantName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Restaurant; \n tA:name ?restaurantName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal h = soln.getLiteral("restaurantName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      Restaurant restaurant = new Restaurant();
+		      restaurant.setName(h.getString());
+		      restaurant.setLatitude(lat.getDouble());
+		      restaurant.setLongitude(lng.getDouble());
+		      restaurant.setInProximityOf(c.toString());
+		      
+		      cityRestaurants.add(restaurant);
+		      System.out.println("Printez " + h.toString());
+		    }
+		    
+		return cityRestaurants;
+	}
+	
+	public List<Restaurant> getAllRestaurantsAroundLocality(String localityName){
+		List<Restaurant> cityRestaurants = new ArrayList<>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString+="select * { \n { \n";
+		
+		//get proximity hotels
+		queryString += "select ?restaurantName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Restaurant; \n tA:name ?restaurantName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		
+		queryString += "}\n UNION \n {\n";
+		
+		//get nearby hotels
+		queryString += "select ?restaurantName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Restaurant; \n tA:name ?restaurantName; \n";
+		queryString += " tA:isContainedBy ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		queryString += "}\n}\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal r = soln.getLiteral("restaurantName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      Restaurant restaurant = new Restaurant();
+		      restaurant.setName(r.getString());
+		      restaurant.setLatitude(lat.getDouble());
+		      restaurant.setLongitude(lng.getDouble());
+		      restaurant.setIsContainedBy(c.toString());
+		      
+		      cityRestaurants.add(restaurant);
+		      System.out.println("Printez " + r.toString());
+		    }
+		    
+		return cityRestaurants;
+	}
+	
+	public List<Museum> getMuseumsNearByLocality(String localityName)
+	{
+		List<Museum> museumList = new ArrayList<Museum>();
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?museumName ?latid ?longit where { \n";
+		queryString += "?museum rdf:type tA:Museum; \n tA:name ?museumName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += " tA:isContainedBy ?city.\n";
+		queryString += " ?city tA:name ?cityName. \n";
+		queryString += " FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		
+		System.out.println(queryString);
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("museumName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      
+	      Museum museum = new Museum();
+	      museum.setName(name.toString());
+	      museum.setLatitude(latitude.getDouble());
+	      museum.setLongitude(longitude.getDouble());
+	      museum.setNearByLocality(localityName);
+	      museumList.add(museum);
+	    }
+		return museumList;
 	}
 	
 	public List<Seaside> getSeasideInProximity(String localityName)

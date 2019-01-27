@@ -15,6 +15,7 @@ import wade.model.Country;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
+import wade.model.Museum;
 import wade.model.Restaurant;
 import wade.model.Seaside;
 import wade.repository.ItineraryService;
@@ -58,12 +59,52 @@ public class ItineraryController {
 		return restaurants;
 	}
 	
+	@RequestMapping(value = "/showRestaurantsInProximity", method = RequestMethod.GET, params = {"localityName"})
+	@ResponseBody
+	public List<Restaurant> getRestaurantsInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Restaurant> restaurants = itineraryService.getRestaurantsInProximity(localityName);
+		return restaurants;
+	}
+	
+	@RequestMapping(value = "/showAllRestaurants", method = RequestMethod.GET, params = {"localityName"})
+	@ResponseBody
+	public List<Restaurant> getAllRestaurantsByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Restaurant> restaurants = itineraryService.getAllRestaurantsAroundLocality(localityName);
+		return restaurants;
+	}
+	
 	@RequestMapping(value = "/showAccomodations", method = RequestMethod.GET, params = {"localityName"})
 	@ResponseBody
 	public List<Accomodation> getAccomodationsByLocality(@RequestParam(value = "localityName") String localityName)
 	{
 		List<Accomodation> accomodations = itineraryService.getAccomodationNearByLocality(localityName);
 		return accomodations;
+	}
+	
+	@RequestMapping(value = "/showAccomodationsInProximity", method = RequestMethod.GET, params = {"localityName"})
+	@ResponseBody
+	public List<Accomodation> getAccomodationsInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Accomodation> accomodations = itineraryService.getAccomodationsInProximity(localityName);
+		return accomodations;
+	}
+	
+	@RequestMapping(value = "/showAllAccomodations", method = RequestMethod.GET, params = {"localityName"})
+	@ResponseBody
+	public List<Accomodation> getAllAccomodationsByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Accomodation> accomodations = itineraryService.getAllAccomodationsAroundCity(localityName);
+		return accomodations;
+	}
+	
+	@RequestMapping(value = "/showMuseums",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Museum> getNearbyMuseumsByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Museum> museumList = itineraryService.getMuseumsNearByLocality(localityName);
+		return museumList;
 	}
 	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
