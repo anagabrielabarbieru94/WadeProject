@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import wade.model.Country;
+import wade.model.Lake;
 import wade.model.Locality;
+import wade.model.Mountain;
 import wade.model.Seaside;
 import wade.repository.ItineraryService;
 
@@ -35,7 +37,6 @@ public class ItineraryController {
 	public Country getCountryByName(@PathVariable("name") String name)
 	{
 		Country country = itineraryService.getCountryByName(name);
-		
 		return country;
 	}
 	
@@ -44,16 +45,31 @@ public class ItineraryController {
 	public List<Locality> getCitiesByCountry(@RequestParam(value = "countryName") String countryName)
 	{
 		List<Locality> cities = itineraryService.getCitiesByCountry(countryName);
-		
 		return cities;
 	}
 	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
-	public List<Seaside> getNaturalTouristicObjective(@RequestParam(value = "localityName") String localityName)
+	public List<Seaside> getProximitySeasides(@RequestParam(value = "localityName") String localityName)
 	{
 		List<Seaside> seasideList = itineraryService.getSeasideInProximity(localityName);
-	
 		return seasideList;
 	}
+	
+	@RequestMapping(value = "/showMountains",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Mountain> getProximityMountains(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Mountain> mountainList = itineraryService.getMountainInProximity(localityName);
+		return mountainList ;
+	}
+	
+	@RequestMapping(value = "/showLakes",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Lake> getProximityLakes(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Lake> lakeList = itineraryService.getLakeInProximity(localityName);
+		return lakeList ;
+	}
+	
 }
