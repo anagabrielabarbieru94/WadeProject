@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import wade.model.Accomodation;
 import wade.model.Country;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
+import wade.model.Restaurant;
 import wade.model.Seaside;
 import wade.repository.ItineraryService;
 
@@ -46,6 +48,22 @@ public class ItineraryController {
 	{
 		List<Locality> cities = itineraryService.getCitiesByCountry(countryName);
 		return cities;
+	}
+	
+	@RequestMapping(value = "/showRestaurants", method = RequestMethod.GET, params = {"localityName"})
+	@ResponseBody
+	public List<Restaurant> getRestaurantsByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Restaurant> restaurants = itineraryService.getRestaurantsNearByLocality(localityName);
+		return restaurants;
+	}
+	
+	@RequestMapping(value = "/showAccomodations", method = RequestMethod.GET, params = {"localityName"})
+	@ResponseBody
+	public List<Accomodation> getAccomodationsByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Accomodation> accomodations = itineraryService.getAccomodationNearByLocality(localityName);
+		return accomodations;
 	}
 	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})

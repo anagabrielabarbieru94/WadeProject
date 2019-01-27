@@ -5,8 +5,8 @@ public class Accomodation {
 	private String name;
 	private double latitude;
 	private double longitude;
-	private Locality isContainedBy;
-	private Locality inProximityOf;
+	private String isContainedBy;
+	private String inProximityOf;
 	
 	public Accomodation() {
 		
@@ -36,21 +36,20 @@ public class Accomodation {
 		this.longitude = longitude;
 	}
 
-	public Locality getIsContainedBy() {
+	public String getIsContainedBy() {
 		return this.isContainedBy;
 	}
 
-	public void setIsContainedBy(Locality isContainedBy) {
+	public void setIsContainedBy(String isContainedBy) {
 		this.isContainedBy = isContainedBy;
 	}
 
-	public Locality getInProximityOf() {
+	public String getInProximityOf() {
 		return this.inProximityOf;
 	}
 
-	public void setInProximityOf(Locality inProximityOf) {
+	public void setInProximityOf(String inProximityOf) {
 		this.inProximityOf = inProximityOf;
 	}
 	
-
 }

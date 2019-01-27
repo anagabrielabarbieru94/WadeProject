@@ -18,10 +18,12 @@ import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.util.FileManager;
 import org.springframework.stereotype.Service;
 
+import wade.model.Accomodation;
 import wade.model.Country;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
+import wade.model.Restaurant;
 import wade.model.Seaside;
 
 @Service
@@ -191,6 +193,79 @@ public class ItineraryService {
 		    }
 		    
 		return countryCities;
+	}
+	
+	public List<Accomodation> getAccomodationNearByLocality(String localityName)
+	{
+		List<Accomodation> accomodationList = new ArrayList<Accomodation>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?accomodationName ?latid ?longit where { \n";
+		queryString += "?accomodation rdf:type tA:Accomodation; \n";
+		queryString += "tA:name ?accomodationName; \n";
+		queryString += "geo:lat ?latid; \n";
+		queryString += "geo:long ?longit; \n";
+		queryString += "tA:isContainedBy tA:"+ localityName + ".}";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("accomodationName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Accomodation accomodation= new Accomodation();
+	      accomodation.setName(name.toString());
+	      accomodation.setLatitude(latitude.getDouble());
+	      accomodation.setLongitude(longitude.getDouble());
+	      accomodation.setIsContainedBy(localityName);
+	      accomodationList.add(accomodation);
+	    }
+		return accomodationList;
+	}
+	
+	public List<Restaurant> getRestaurantsNearByLocality(String localityName)
+	{
+		List<Restaurant> restaurantList = new ArrayList<Restaurant>();
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?restaurantName ?latid ?longit where { \n";
+		queryString += "?seaside rdf:type tA:Restaurant; \n tA:name ?restaurantName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += "	tA:isContainedBy tA:"+localityName+". }\n";
+		
+		System.out.println(queryString);
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("restaurantName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Restaurant restaurant = new Restaurant();
+	      restaurant.setName(name.toString());
+	      restaurant.setLatitude(latitude.getDouble());
+	      restaurant.setLongitude(longitude.getDouble());
+	      restaurant.setIsContainedBy(localityName);
+	      restaurantList.add(restaurant);
+	    }
+		return restaurantList;
 	}
 	
 	public List<Seaside> getSeasideInProximity(String localityName)
