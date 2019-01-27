@@ -1,11 +1,15 @@
 package wade.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import wade.model.Customer;
+import wade.model.LoginDto;
 import wade.repository.CustomerRepository;
 
 @RestController
@@ -13,6 +17,20 @@ public abstract class AccountController {
 	
 	@Autowired
 	protected CustomerRepository repository;
+	
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Customer login(@RequestBody LoginDto body) throws Exception {
+		System.out.println(body.getPassword() + " " +body.getUserName() );
+		//Customer result = repository.getEmployeeByUsername(body.getUserName());
+		Customer result = new Customer();
+		result.setUsername("alex");
+		result.setPassword("alex");
+		if(result != null) {
+			return result.getPassword().equals(body.getPassword()) ? result : null;
+		} else {
+			throw new Exception();
+		}
+	}
 	
 	@RequestMapping("/save")
 	public String process(){
