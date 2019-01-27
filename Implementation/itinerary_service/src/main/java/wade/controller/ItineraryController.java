@@ -107,6 +107,22 @@ public class ItineraryController {
 		return museumList;
 	}
 	
+	@RequestMapping(value = "/showMuseumsInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Museum> getMuseumsInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Museum> museumList = itineraryService.getMuseumsInProximity(localityName);
+		return museumList;
+	}
+	
+	@RequestMapping(value = "/showAllMuseums",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Museum> getAllMuseumsByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Museum> museumList = itineraryService.getAllMuseumsAroundLocality(localityName);
+		return museumList;
+	}
+	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
 	public List<Seaside> getProximitySeasides(@RequestParam(value = "localityName") String localityName)

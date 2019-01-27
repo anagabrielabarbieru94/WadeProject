@@ -159,7 +159,7 @@ public class ItineraryService {
 		queryString += "<http://www.opengis.net/ont/geosparql#lat> ?lat; \n";
 		queryString += "<http://www.opengis.net/ont/geosparql#long> ?long. \n ";
 		queryString += "?country tA:name ?countryName. \n";
-		queryString += "FILTER regex(?countryName, "+ countryName + ", \"i\"). }\n";
+		queryString += "FILTER regex(?countryName, \""+ countryName + "\", \"i\"). }\n";
 		System.out.println(queryString);
 		
 		Query query = QueryFactory.create(queryString);
@@ -249,7 +249,7 @@ public class ItineraryService {
 		queryString += "geo:lat ?lat; \n";
 		queryString += "geo:long ?long. \n ";
 		queryString += "?city tA:name ?cityName. \n";
-		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
 		System.out.println(queryString);
 		
 		Query query = QueryFactory.create(queryString);
@@ -300,7 +300,7 @@ public class ItineraryService {
 		queryString += "geo:lat ?lat; \n";
 		queryString += "geo:long ?long. \n ";
 		queryString += "?city tA:name ?cityName. \n";
-		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
 		
 		queryString += "}\n UNION \n {\n";
 		
@@ -311,7 +311,7 @@ public class ItineraryService {
 		queryString += "geo:lat ?lat; \n";
 		queryString += "geo:long ?long. \n ";
 		queryString += "?city tA:name ?cityName. \n";
-		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
 		queryString += "}\n}\n";
 		
 		System.out.println(queryString);
@@ -395,7 +395,7 @@ public class ItineraryService {
 		queryString += "geo:lat ?lat; \n";
 		queryString += "geo:long ?long. \n ";
 		queryString += "?city tA:name ?cityName. \n";
-		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
 		System.out.println(queryString);
 		
 		Query query = QueryFactory.create(queryString);
@@ -446,7 +446,7 @@ public class ItineraryService {
 		queryString += "geo:lat ?lat; \n";
 		queryString += "geo:long ?long. \n ";
 		queryString += "?city tA:name ?cityName. \n";
-		queryString += "FILTER regex(?cityName, "+ localityName + ", \"i\"). }\n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
 		
 		queryString += "}\n UNION \n {\n";
 		
@@ -528,6 +528,108 @@ public class ItineraryService {
 	      museumList.add(museum);
 	    }
 		return museumList;
+	}
+	
+	public List<Museum> getMuseumsInProximity(String localityName)
+	{
+		List<Museum> museumList = new ArrayList<Museum>();
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?museumName ?latid ?longit ?cityName where { \n";
+		queryString += "?museum rdf:type tA:Museum; \n tA:name ?museumName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += " tA:inProximityOf ?city.\n";
+		queryString += " ?city tA:name ?cityName. \n";
+		queryString += " FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		
+		System.out.println(queryString);
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("museumName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Literal c = soln.getLiteral("cityName") ;
+	      
+	      Museum museum = new Museum();
+	      museum.setName(name.toString());
+	      museum.setLatitude(latitude.getDouble());
+	      museum.setLongitude(longitude.getDouble());
+	      museum.setLocalityProximity(c.toString());
+	      museumList.add(museum);
+	    }
+		return museumList;
+	}
+	
+	public List<Museum> getAllMuseumsAroundLocality(String localityName){
+		List<Museum> cityMuseums = new ArrayList<Museum>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString+="select * { \n { \n";
+		
+		//get proximity hotels
+		queryString += "select ?museumName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Museum; \n tA:name ?museumName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		
+		queryString += "}\n UNION \n {\n";
+		
+		//get nearby hotels
+		queryString += "select ?museumName ?lat ?long ?cityName where { \n";
+		queryString += "?hotel rdf:type tA:Museum; \n tA:name ?museumName; \n";
+		queryString += " tA:isContainedBy ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		queryString += "}\n}\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal r = soln.getLiteral("museumName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      Museum museum = new Museum();
+		      museum.setName(r.getString());
+		      museum.setLatitude(lat.getDouble());
+		      museum.setLongitude(lng.getDouble());
+		      museum.setLocalityProximity(c.toString());
+		      
+		      cityMuseums.add(museum);
+		      System.out.println("Printez " + r.toString());
+		    }
+		    
+		return cityMuseums;
 	}
 	
 	public List<Seaside> getSeasideInProximity(String localityName)
