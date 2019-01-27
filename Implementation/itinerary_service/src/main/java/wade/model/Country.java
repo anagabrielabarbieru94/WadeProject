@@ -25,6 +25,11 @@ public class Country {
 		return this.name;
 	}
 	
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+	
 	public String getDescription()
 	{
 		return this.description;
@@ -33,6 +38,11 @@ public class Country {
 	public String getCountryCode()
 	{
 		return this.countryCode;
+	}
+	
+	public void setCountryCode(String code) 
+	{
+		this.countryCode = code;
 	}
 	
 	public void setCapital(Locality capital) {
