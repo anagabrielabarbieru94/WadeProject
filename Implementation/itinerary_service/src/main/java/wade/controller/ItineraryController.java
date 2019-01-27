@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wade.model.Country;
 import wade.model.Locality;
+import wade.model.Seaside;
 import wade.repository.ItineraryService;
 
 @RestController
@@ -44,5 +45,14 @@ public class ItineraryController {
 		List<Locality> cities = itineraryService.getCitiesByCountry(countryName);
 		
 		return cities;
+	}
+	
+	@RequestMapping(value = "/showSeasides",params= {"localityName"})
+	@ResponseBody
+	public List<Seaside> getNaturalTouristicObjective(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Seaside> seasideList = itineraryService.getSeasideInProximity(localityName);
+	
+		return seasideList;
 	}
 }

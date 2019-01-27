@@ -1,6 +1,6 @@
 package wade.model;
 
-public class CulturalAttraction extends TouristicObjective{
+public abstract class CulturalAttraction {
 
 	public CulturalAttraction() {
 		

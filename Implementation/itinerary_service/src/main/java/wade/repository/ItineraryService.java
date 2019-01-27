@@ -20,9 +20,18 @@ import org.springframework.stereotype.Service;
 
 import wade.model.Country;
 import wade.model.Locality;
+import wade.model.Seaside;
 
 @Service
 public class ItineraryService {
+	private Model model;
+	
+	public ItineraryService()
+	{	
+		String path = "src//main//resources//toWas.ttl";
+		model = FileManager.get().loadModel(path);
+	}
+	
 	public List<Country> getAllCountries()
 	{
 		List<Country> availableCountries = new ArrayList<Country>();
@@ -40,13 +49,11 @@ public class ItineraryService {
 		queryString += "<http://www.opengis.net/ont/geosparql#lat> ?lat; \n";
 		queryString += "<http://www.opengis.net/ont/geosparql#long> ?long. \n }";
 		
-		Model model = FileManager.get().loadModel("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
-		
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qexec = QueryExecutionFactory.sparqlService(
 				"http://localhost:7200/repositories/towas", query);
 		
-		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		//((QueryEngineHTTP)qexec).addParam("timeout", "10000");
 		
 		    ResultSet results = qexec.execSelect() ;
 		    System.out.println(results.getResultVars().toString());
@@ -96,7 +103,6 @@ public class ItineraryService {
 		queryString += "<http://www.opengis.net/ont/geosparql#lat> ?lat; \n";
 		queryString += "<http://www.opengis.net/ont/geosparql#long> ?long. \n";
 		queryString += "FILTER regex(?countryName, \""+ countryName + "\", \"i\"). }\n";
-		Model model = FileManager.get().loadModel("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
 		System.out.println(queryString);
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qexec = QueryExecutionFactory.sparqlService(
@@ -150,7 +156,6 @@ public class ItineraryService {
 		queryString += "?country tA:name ?countryName. \n";
 		queryString += "FILTER regex(?countryName, "+ countryName + ", \"i\"). }\n";
 		System.out.println(queryString);
-		Model model = FileManager.get().loadModel("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
 		
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qexec = QueryExecutionFactory.sparqlService(
@@ -184,6 +189,42 @@ public class ItineraryService {
 		    }
 		    
 		return countryCities;
+	}
+	
+	public List<Seaside> getSeasideInProximity(String localityName)
+	{	
+		List<Seaside> seasideList = new ArrayList<Seaside>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?seasideName ?latid ?longit where { \n";
+		queryString += "?seaside rdf:type tA:Seaside; \n tA:name ?seasideName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += "	tA:inProximityOf tA:"+localityName+". }\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("seasideName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Seaside seaside = new Seaside();
+	      seaside.setName(name.toString());
+	      seaside.setLatitude(latitude.getDouble());
+	      seaside.setLongitude(longitude.getDouble());
+	      seaside.setLocalityProximity(localityName);
+	      seasideList.add(seaside);
+	    }
+		return seasideList;
 	}
 	
 }
