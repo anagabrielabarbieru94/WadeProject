@@ -26,23 +26,22 @@ public class ItineraryService {
 	public List<Country> getAllCountries()
 	{
 		List<Country> availableCountries = new ArrayList<Country>();
-		ParameterizedSparqlString pss = new ParameterizedSparqlString();
-	
-		pss.setBaseUri("http://localhost:7200/repositories/towas");
-		pss.setNsPrefix("owl","http://www.w3.org/2002/07/owl#");
-		pss.setNsPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		pss.setNsPrefix("tA", "http://www.example.com/touristAsist#");
 		
 		String queryString = "";
 		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
-		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>";
-		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>";
-		queryString += "select ?countryName where { \n";
-		queryString += "?country rdf:type tA:Country; \n tA:name ?countryName . }";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString += "select ?countryName ?description ?code ?capitalName ?lat ?long where { \n";
+		queryString += "?country rdf:type tA:Country; \n tA:name ?countryName;\n";
+		queryString += "tA:description ?description; \n";
+		queryString += "tA:hasCode ?code; \n";
+		queryString += "tA:hasCapital ?capital. \n";
+		queryString += "?capital tA:name ?capitalName; \n";
+		queryString += "<http://www.opengis.net/ont/geosparql#lat> ?lat; \n";
+		queryString += "<http://www.opengis.net/ont/geosparql#long> ?long. \n }";
+		
 		Model model = FileManager.get().loadModel("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
 		
-		pss.setCommandText(queryString);
-		System.out.println(pss.toString());
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qexec = QueryExecutionFactory.sparqlService(
 				"http://localhost:7200/repositories/towas", query);
@@ -55,11 +54,24 @@ public class ItineraryService {
 		    {
 		    System.out.println("intra    ");
 		      QuerySolution soln = results.nextSolution() ;
-		      //RDFNode x = soln.get("countryName") ;       
-		     // Resource r = soln.getResource("countryName") ; 
-		      Literal l = soln.getLiteral("countryName") ; 
+		     
+		      Literal l = soln.getLiteral("countryName") ;
+		      Literal d = soln.getLiteral("description") ; 
+		      Literal code = soln.getLiteral("code");
+		      Literal capital = soln.getLiteral("capitalName");
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      
 		      Country currentCountry = new Country();
 		      currentCountry.setName(l.toString());
+		      currentCountry.setDescription(d.toString());
+		      currentCountry.setCountryCode(code.toString());
+		      Locality capitalLocality = new Locality();
+		      capitalLocality.setName(capital.toString());
+		      capitalLocality.setLatitude(lat.getDouble());
+		      capitalLocality.setLongitude(lat.getDouble());
+		      currentCountry.setCapital(capitalLocality);
+		      
 		      availableCountries.add(currentCountry);
 		      System.out.println("Printez " + l.toString());
 		    }
@@ -121,4 +133,57 @@ public class ItineraryService {
 		    
 		return country;
 	}
+	
+	public List<Locality> getCitiesByCountry(String countryName){
+		List<Locality> countryCities = new ArrayList<>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString += "select ?cityName ?description ?lat ?long where { \n";
+		queryString += "?city rdf:type tA:Locality; \n tA:name ?cityName;\n";
+		queryString += " tA:isIncludedBy ?country; \n";
+		queryString += "tA:description ?description; \n";
+		queryString += "<http://www.opengis.net/ont/geosparql#lat> ?lat; \n";
+		queryString += "<http://www.opengis.net/ont/geosparql#long> ?long. \n ";
+		queryString += "?country tA:name ?countryName. \n";
+		queryString += "FILTER regex(?countryName, "+ countryName + ", \"i\"). }\n";
+		System.out.println(queryString);
+		Model model = FileManager.get().loadModel("D:\\Facultate\\Dezv.Aplic.Web\\WadeProject\\Implementation\\sparql_endpoint\\toWas.ttl");
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		    System.out.println("intra    ");
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal l = soln.getLiteral("cityName") ;
+		      Literal d = soln.getLiteral("description") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      
+		      Country country = new Country();
+		      country.setName(countryName);
+		      Locality locality = new Locality();
+		      locality.setName(l.toString());
+		      locality.setLatitude(lat.getDouble());
+		      locality.setLongitude(lat.getDouble());
+		      locality.setIsIncludedBy(country);
+		      
+		      countryCities.add(locality);
+		      System.out.println("Printez " + l.toString());
+		    }
+		    
+		return countryCities;
+	}
+	
 }
