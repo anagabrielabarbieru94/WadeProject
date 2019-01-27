@@ -18,6 +18,7 @@ import wade.model.Mountain;
 import wade.model.Museum;
 import wade.model.Restaurant;
 import wade.model.Seaside;
+import wade.model.Theater;
 import wade.repository.ItineraryService;
 
 @RestController
@@ -122,6 +123,31 @@ public class ItineraryController {
 		List<Museum> museumList = itineraryService.getAllMuseumsAroundLocality(localityName);
 		return museumList;
 	}
+	
+	@RequestMapping(value = "/showTheaters",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Theater> getNearByTheaters(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Theater> theaterList = itineraryService.getTheatersNearByLocality(localityName);
+		return theaterList;
+	}
+	
+	@RequestMapping(value = "/showTheatersInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Theater> getNearByTheatersInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Theater> theaterList = itineraryService.getTheatersInProximity(localityName);
+		return theaterList;
+	}
+	
+	@RequestMapping(value = "/showAllTheaters",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Theater> getAllTheatersByCity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Theater> theaterList = itineraryService.getAllTheatersAroundLocality(localityName);
+		return theaterList;
+	}
+	
 	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
