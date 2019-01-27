@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,8 @@ public class ItineraryController {
 	@Autowired
 	protected ItineraryService itineraryService;
 	
-	@RequestMapping("/showCountries")
+	@RequestMapping(value = "/showCountries", method = RequestMethod.GET)
+	@ResponseBody
 	public List<Country>  findAllCountries()
 	{
 		List<Country> countries = itineraryService.getAllCountries();
@@ -28,7 +30,7 @@ public class ItineraryController {
 		//return "Done";
 	}
 	
-	@RequestMapping(value = "/showCountries/{name}")
+	@RequestMapping(value = "/showCountries/{name}", method = RequestMethod.GET)
 	@ResponseBody
 	public Country getCountryByName(@PathVariable("name") String name)
 	{
@@ -37,8 +39,7 @@ public class ItineraryController {
 		return country;
 	}
 	
-	@RequestMapping(value = "/showCities", 
-			params = {"countryName"})
+	@RequestMapping(value = "/showCities", method = RequestMethod.GET, params = {"countryName"})
 	@ResponseBody
 	public List<Locality> getCitiesByCountry(@RequestParam(value = "countryName") String countryName)
 	{
@@ -47,7 +48,7 @@ public class ItineraryController {
 		return cities;
 	}
 	
-	@RequestMapping(value = "/showSeasides",params= {"localityName"})
+	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
 	public List<Seaside> getNaturalTouristicObjective(@RequestParam(value = "localityName") String localityName)
 	{
