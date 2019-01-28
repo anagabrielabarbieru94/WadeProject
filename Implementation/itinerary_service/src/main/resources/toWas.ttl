@@ -96,15 +96,6 @@ tA:AdventureActivity 	  rdf:type 				owl:Class ;
 tA:Itinerary 			  rdf:type 				owl:Class;
 						  rdfs:comment			"A full itinerary planned by a user" .	
 
-tA:FamilyItinerary		  rdf:type 				owl:Class;
-						  rdfs:subClassOf       tA:Itinerary ;
-						  rdfs:comment 			"An itinerary suitable for a family with kids".
-
-tA:AdventureItinerary     rdf:type				owl:Class;
-						  rdfs:subClassOf		tA:Itinerary ;
-						  rdfs:comment   		"An itinerary suitable for a single person ".
-
-
 #Properties
 
 tA:name 					rdf:type 			owl:DatatypeProperty ;
@@ -130,8 +121,8 @@ tA:include					rdf:type 			owl:ObjectProperty ;
 							rdfs:comment		"A country contains many localities".
 
 tA:isIncludedBy				rdf:type 			owl:ObjectProperty ;
-							rdfs:range 			tA:Country;
 							rdfs:domain			tA:Locality;
+							rdfs:range 			tA:Country;
 							owl:inverseOf       tA:include; 
 							rdfs:comment		"A country contains many localities".
 
@@ -159,24 +150,15 @@ tA:inProximityOf			rdf:type 			owl:ObjectProperty ;
 							rdfs:comment		"An entity is in proximity of a locality if they are located in the same region (state, county)".
 
 tA:isSpecificTo    			rdf:type 			owl:ObjectProperty ;
-							rdfs:domain 		tA:CulturalActivity,tA:EntertainmentActivity ;
-							rdfs:range 			tA:CulturalAttraction ;
+							rdfs:domain 		tA:Activity;
+							rdfs:range 			tA:TouristicObjective;
 							rdfs:comment 		"A cultural activity can be held in proximity of a cultural attraction".
 
-tA:isHeldAt					rdf:type			owl:ObjectProperty ;
-							rdfs:domain			tA:AdventureActivity, tA:EntertainmentActivity ;
-							rdfs:range			tA:NaturalAttraction ;
-							rdfs:comment		"An adventure activity is held in proximity of a natural attraction".
 
-tA:embracedBy				rdf:type 			owl:ObjectProperty ;
-							rdfs:domain 		tA:CulturalActivity,tA:EntertainmentActivity ;
-							rdfs:range 			tA:FamilyItinerary ;
-							rdfs:comment 		"Activities preffered in a Family Itinerary" .
-
-tA:preferredBy				rdf:type			owl:ObjectProperty ;
-							rdfs:domain 		tA:AdventureActivity, tA:EntertainmentActivity ;
-							rdfs:range 			tA:AdventureItinerary ;
-							rdfs:comment		"Activities preffered by a single person who wants to have fun".
+tA:offer					rdf:type 			owl:ObjectProperty ;
+							rdfs:domain			tA:TouristicObjective;
+							rdfs:range			tA:Activity;
+							rdfs:comment 		"In proximity of touristic objective you can find activities" .
 
 
 tA:hasScheduled				rdf:type			owl:ObjectProperty ;
@@ -212,35 +194,45 @@ tA:isCapitalOf				rdf:type			owl:ObjectProperty;
 							owl:inverseOf       tA:hasCapital;
 							rdfs:comment		"A locality can be the capital of a country".
 
-tA:Sunbathing 				rdf:type 			tA:EntertainmentActivity.
-tA:Sunbathing				tA:name   			"Sunbathing".
+tA:Sunbathing 				rdf:type 			tA:EntertainmentActivity;
+							tA:name   			"Sunbathing";
+							tA:isSpecificTo		tA:Seaside.
 
-tA:Picnic					rdf:type 			tA:EntertainmentActivity.
-tA:Picnic					tA:name   			"Picnic".
+tA:NatureWalking 			rdf:type			tA:EntertainmentActivity;
+							tA:name             "Nature Walking";
+							tA:isSpecificTo		tA:OtherNaturalAttraction .
 
-tA:NatureWalking 			rdf:type			tA:EntertainmentActivity.
-tA:NatureWalking			tA:name             "Nature Walking".
+tA:Hiking					rdf:type			tA:AdventureActivity;
+							tA:name   			"Hiking"; 
+							tA:isSpecificTo 	tA:Mountain.
 
-tA:Shopping					rdf:type			tA:EntertainmentActivity.
-tA:Shopping					tA:name 			"Shopping".
+tA:Swimming					rdf:type			tA:AdventureActivity;
+							tA:name    			"Swimming";
+							tA:isSpecificTo		tA:Lake,tA:Seaside.
 
-tA:Hiking					rdf:type			tA:AdventureActivity.
-tA:Hiking					tA:name  			"Hiking".
+tA:Skiing					rdf:type			tA:AdventureActivity;
+							tA:name 			"Skiing";
+							tA:isSpecificTo		tA:Mountain.
 
-tA:Swimming					rdf:type			tA:AdventureActivity.
-tA:Swimming					tA:name    			"Swimming".
 
-tA:Skiing					rdf:type			tA:AdventureActivity.
-tA:Skiing					tA:name 			"Skiing".
+tA:SeeingAnExhibition		rdf:type			tA:CulturalActivity;
+							tA:name             "Seeing an exhibition";
+							tA:isSpecificTo		tA:Museum.
 
-tA:Hunting					rdf:type			tA:AdventureActivity.
-tA:Hunting					tA:name 			"Hunting".
+tA:SeeingAStagePlay			rdf:type			tA:CulturalActivity;
+							tA:name  			"Seeing a stage play";
+							tA:isSpecificTo		tA:Theatre.
 
-tA:Sightseeing	 			rdf:type 			tA:CulturalActivity.
-tA:Sightseeing				tA:name  			"Sightseeing".
+tA:Sightseeing	 			rdf:type 			tA:CulturalActivity;
+							tA:name 			"Sightseeing";
+							tA:isSpecificTo  	tA:OtherCulturalAttractions,tA:Museum.
 
-tA:SeeingAnExhibition		rdf:type			tA:CulturalActivity.
-tA:SeeingAnExhibition		tA:name             "Seeing an exhibition".
 
-tA:SeeingAStagePlay			rdf:type			tA:CulturalActivity.
-tA:SeeingAStagePlay			tA:name  			"Seeing a stage play".
+tA:Seaside 					tA:offer			tA:Sunbathing,tA:Swimming.
+tA:Mountain 				tA:offer 			tA:Hiking, tA:Skiing.
+tA:OtherNaturalAttraction    tA:offer			tA:NatureWalking.
+tA:Lake 					tA:offer			tA:Swimming.
+
+tA:Museum 					tA:offer 			tA:SeeingAnExhibition,tA:Sightseeing.
+tA:Theatre  				tA:offer 			tA:SeeingAStagePlay.
+tA:OtherCulturalAttractions	tA:offer			tA:Sightseeing.
