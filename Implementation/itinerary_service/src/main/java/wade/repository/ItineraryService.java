@@ -192,7 +192,6 @@ public class ItineraryService {
 		      locality.setName(l.toString());
 		      locality.setLatitude(lat.getDouble());
 		      locality.setLongitude(lat.getDouble());
-		      locality.setIsIncludedBy(country);
 		      
 		      countryCities.add(locality);
 		      System.out.println("Printez " + l.toString());
@@ -1424,4 +1423,43 @@ public class ItineraryService {
 		return activityList;
 	}
 	
+	public List<Locality>listOfLocalititesByActivity(String countryName,String activity)
+	{
+		List<Locality> localityList = new ArrayList<Locality>();
+		
+		String queryString="";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString += "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString += "select distinct ?orasname ?desc where { \n";
+		queryString += "?oras rdf:type tA:Locality; \n"; 
+		queryString += "tA:isIncludedBy tA:"+countryName + "; \n";
+		queryString += "tA:description ?desc; \n";
+		queryString += "tA:name ?orasname. \n";
+		queryString += "?oras tA:addiacentTo ?obiectiv. \n";
+		queryString += "?obiectiv tA:name ?obiectivNume; \n";
+		queryString += "          rdf:type ?tipObiectiv. \n";
+		queryString += "?tipObiectiv tA:offer tA:"+activity +". }\n";
+		
+		System.out.println(queryString);
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;
+	     
+	      Literal locality = soln.getLiteral("orasname") ; 
+	      Literal description = soln.getLiteral("desc");
+	      Locality currentLocality= new Locality();
+	      currentLocality.setDescription(description.getString());
+	      currentLocality.setName(locality.getString());
+	      localityList.add(currentLocality);
+	    }
+	    
+		return localityList;
+	}
 }

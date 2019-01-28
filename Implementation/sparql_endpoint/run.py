@@ -182,6 +182,16 @@ def populateCapitalCities():
         sparql.query()
  
 
+def populateActivities(activity,category):
+    queryString = "prefix tA: <http://www.example.com/touristAsist#> \n"
+    queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n "
+    queryString += "prefix geo:<http://www.opengis.net/ont/geosparql#> \n "
+    queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n"
+    queryString += "{   tA:"+activity+ "rdf:type tA:"+category " ;\n"
+    
+
+pass
+
 #populateCountries()
 #populateCapitalCities()
-populateNonCapitalCities()
+#populateNonCapitalCities()

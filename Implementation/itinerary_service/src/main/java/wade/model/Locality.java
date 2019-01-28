@@ -6,11 +6,10 @@ public class Locality {
 	private String description;
 	private double latitude;
 	private double longitude;
-	private Country isIncludedBy;
-	private Country capitalOf;
 	
 	public Locality() {
-		
+		this.longitude = 0;
+		this.latitude = 0;
 	}
 	
 	public String getName() {
@@ -44,21 +43,4 @@ public class Locality {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	
-	public Country getIsIncludedBy() {
-		return this.isIncludedBy;
-	}
-	
-	public void setIsIncludedBy(Country isIncludedBy) {
-		this.isIncludedBy = isIncludedBy;
-	}
-
-	public Country getCapitalOf() {
-		return this.capitalOf;
-	}
-
-	public void setCapitalOf(Country capitalOf) {
-		this.capitalOf = capitalOf;
-	}
-	
 }

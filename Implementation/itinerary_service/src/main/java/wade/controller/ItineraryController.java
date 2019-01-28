@@ -40,6 +40,15 @@ public class ItineraryController {
 		//return "Done";
 	}
 	
+	@RequestMapping(value = "/showLocalities", method =RequestMethod.GET, params= {"countryName","activity"})
+	@ResponseBody
+	public List<Locality> getLocalitiesByActivities(@RequestParam(value = "countryName") String countryName,
+			@RequestParam (value = "activity") String activity)
+	{
+		List<Locality>listOfLocalities = itineraryService.listOfLocalititesByActivity(countryName,activity);
+		return listOfLocalities;
+	}
+	
 	@RequestMapping(value = "/showCountries/{name}", method = RequestMethod.GET)
 	@ResponseBody
 	public Country getCountryByName(@PathVariable("name") String name)
