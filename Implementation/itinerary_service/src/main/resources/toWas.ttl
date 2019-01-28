@@ -212,3 +212,35 @@ tA:isCapitalOf				rdf:type			owl:ObjectProperty;
 							owl:inverseOf       tA:hasCapital;
 							rdfs:comment		"A locality can be the capital of a country".
 
+tA:Sunbathing 				rdf:type 			tA:EntertainmentActivity;
+							tA:name   			"Sunbathing".
+
+tA:Picnic					rdf:type 			tA:EntertainmentActivity;
+							tA:name   			"Picnic".
+
+tA:NatureWalking 			rdf:type			tA:EntertainmentActivity;
+							tA:name             "Nature Walking".
+
+tA:Shopping					rdf:type			tA:EntertainmentActivity;
+							tA:name 			"Shopping".
+
+tA:Hiking					rdf:type			tA:AdventureActivity;
+							tA:name  			"Hiking";
+
+tA:Swimming					rdf:type			tA:AdventureActivity;
+							tA:name    			"Swimming".
+
+tA:Skiing					rdf:type			tA:AdventureActivity;
+							tA:name 			"Skiing"
+
+tA:Hunting					rdf:type			tA:AdventureActivity;
+							tA:name 			"Hunting".
+
+tA:Sightseeing	 			rdf:type 			tA:CulturalActivity;
+							tA:name  			"Sightseeing".
+
+tA:SeeingAnExhibition		rdf:type			tA:CulturalActivity;
+							tA:name             "Seeing an exhibition".
+
+tA:SeeingAStagePlay			rdf:type			tA:CulturalActivity;
+							tA:name  			"Seeing a stage play".
