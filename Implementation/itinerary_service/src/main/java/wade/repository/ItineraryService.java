@@ -1397,7 +1397,7 @@ public class ItineraryService {
 		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
 		queryString += "select ?activityName ?specificObjective where { \n";
 		queryString += "?activity rdf:type tA:Activity; \n tA:name ?activityName; \n";
-		queryString += "tA:isSpecificTo ?specificObjectiv.\n }\n";
+		queryString += "tA:isSpecificTo ?specificObjective.\n }\n";
 		System.out.println(queryString);
 		
 		Query query = QueryFactory.create(queryString);
@@ -1414,9 +1414,11 @@ public class ItineraryService {
 		      QuerySolution soln = results.nextSolution() ;
 		     
 		      Literal activity = soln.getLiteral("activityName") ; 
-		      Literal obj = soln.getLiteral("specificObjectiv");
+		      Resource obj = soln.getResource("specificObjective");
+		      
 		      Activity currentActivity = new Activity();
 		      currentActivity.setActivityName(activity.getString());
+		      currentActivity.setSpecificObjective(obj.toString());
 		      activityList.add(currentActivity);
 		    }
 		    
