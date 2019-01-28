@@ -289,7 +289,7 @@ public class ItineraryController {
 		return activities;
 	}
 	
-	@RequestMapping(value = "/showCities",method = RequestMethod.GET, params= {"latitude", "longitude"})
+	@RequestMapping(value = "/showCitiesNearByCoordinates",method = RequestMethod.GET, params= {"latitude", "longitude"})
 	@ResponseBody
 	public List<String> getCitiesByCoordinates(@RequestParam(value = "latitude") Double latitude, 
 			@RequestParam(value = "longitude") Double longitude)
