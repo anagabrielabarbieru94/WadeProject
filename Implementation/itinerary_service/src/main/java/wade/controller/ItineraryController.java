@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import wade.model.Accomodation;
+import wade.model.Activity;
 import wade.model.Country;
 import wade.model.EntertainmentObjective;
 import wade.model.Lake;
@@ -18,6 +19,7 @@ import wade.model.Locality;
 import wade.model.Mountain;
 import wade.model.Museum;
 import wade.model.OtherCulturalAttraction;
+import wade.model.OtherNaturalAttraction;
 import wade.model.Restaurant;
 import wade.model.Seaside;
 import wade.model.Theater;
@@ -176,6 +178,14 @@ public class ItineraryController {
 	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
+	public List<Seaside> getNearBySeasides(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Seaside> seasideList = itineraryService.getSeasideNearByLocality(localityName);
+		return seasideList;
+	}
+	
+	@RequestMapping(value = "/showSeasidesInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
 	public List<Seaside> getProximitySeasides(@RequestParam(value = "localityName") String localityName)
 	{
 		List<Seaside> seasideList = itineraryService.getSeasideInProximity(localityName);
@@ -183,6 +193,14 @@ public class ItineraryController {
 	}
 	
 	@RequestMapping(value = "/showMountains",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<Mountain> getNearbyMountains(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Mountain> mountainList = itineraryService.getNearByMountains(localityName);
+		return mountainList ;
+	}
+	
+	@RequestMapping(value = "/showMountainsInProximity",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
 	public List<Mountain> getProximityMountains(@RequestParam(value = "localityName") String localityName)
 	{
@@ -192,10 +210,36 @@ public class ItineraryController {
 	
 	@RequestMapping(value = "/showLakes",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
+	public List<Lake> getNearByLakes(@RequestParam(value = "localityName") String localityName)
+	{
+		List<Lake> lakeList = itineraryService.getLakesNearByLocality(localityName);
+		return lakeList ;
+	}
+	
+	
+	@RequestMapping(value = "/showLakesInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
 	public List<Lake> getProximityLakes(@RequestParam(value = "localityName") String localityName)
 	{
 		List<Lake> lakeList = itineraryService.getLakeInProximity(localityName);
 		return lakeList ;
+	}
+	
+	
+	@RequestMapping(value = "/showOtherNaturalAttractions",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<OtherNaturalAttraction> getNearByOtherNaturalAttractions(@RequestParam(value = "localityName") String localityName)
+	{
+		List<OtherNaturalAttraction> naturalAttractionsList = itineraryService.getOtherNaturalAttractionsNearByLocality(localityName);
+		return naturalAttractionsList ;
+	}
+	
+	@RequestMapping(value = "/showOtherNaturalAttractionsInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<OtherNaturalAttraction> getOtherNaturalAttractionsInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<OtherNaturalAttraction> naturalAttractionsList = itineraryService.getOtherNaturalAttractionsInProximity(localityName);
+		return naturalAttractionsList ;
 	}
 	
 	@RequestMapping(value = "/showEntertainmentObjectives",method = RequestMethod.GET, params= {"localityName"})
@@ -221,4 +265,13 @@ public class ItineraryController {
 		List<EntertainmentObjective> entertainmentList = itineraryService.getAllEntertainmentObjectivesAroundLocality(localityName);
 		return entertainmentList;
 	}
+	
+	@RequestMapping(value = "/showActivities", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Activity> getAllActivities()
+	{
+		List<Activity> activities = itineraryService.getAllActivities();
+		return activities;
+	}
+	
 }

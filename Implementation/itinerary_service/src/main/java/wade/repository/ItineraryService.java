@@ -19,6 +19,7 @@ import org.apache.jena.util.FileManager;
 import org.springframework.stereotype.Service;
 
 import wade.model.Accomodation;
+import wade.model.Activity;
 import wade.model.Country;
 import wade.model.EntertainmentObjective;
 import wade.model.Lake;
@@ -26,6 +27,7 @@ import wade.model.Locality;
 import wade.model.Mountain;
 import wade.model.Museum;
 import wade.model.OtherCulturalAttraction;
+import wade.model.OtherNaturalAttraction;
 import wade.model.Restaurant;
 import wade.model.Seaside;
 import wade.model.Theater;
@@ -358,7 +360,7 @@ public class ItineraryService {
 		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
 		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
 		queryString += "select ?restaurantName ?latid ?longit where { \n";
-		queryString += "?seaside rdf:type tA:Restaurant; \n tA:name ?restaurantName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += "?restaurant rdf:type tA:Restaurant; \n tA:name ?restaurantName; \n geo:lat ?latid; \n geo:long ?longit;\n";
 		queryString += "	tA:isContainedBy tA:"+localityName+". }\n";
 		
 		System.out.println(queryString);
@@ -925,6 +927,41 @@ public class ItineraryService {
 		return attractionsList;
 	}
 	
+	public List<Seaside> getSeasideNearByLocality(String localityName)
+	{	
+		List<Seaside> seasideList = new ArrayList<Seaside>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\n";
+		queryString += "select ?seasideName ?latid ?longit where { \n";
+		queryString += "?seaside rdf:type tA:Seaside; \n tA:name ?seasideName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += "	tA:isContainedBy tA:"+localityName+". }\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(queryString);
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("seasideName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Seaside seaside = new Seaside();
+	      seaside.setName(name.toString());
+	      seaside.setLatitude(latitude.getDouble());
+	      seaside.setLongitude(longitude.getDouble());
+	      seaside.setNearByLocality(localityName);
+	      seasideList.add(seaside);
+	    }
+		return seasideList;
+	}
 	
 	public List<Seaside> getSeasideInProximity(String localityName)
 	{	
@@ -960,6 +997,42 @@ public class ItineraryService {
 	      seasideList.add(seaside);
 	    }
 		return seasideList;
+	}
+	
+	public List<Mountain> getNearByMountains(String localityName)
+	{	
+		List<Mountain> mountainList = new ArrayList<Mountain>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?mountainName ?latid ?longit where { \n";
+		queryString += "?mountain rdf:type tA:Mountain; \n tA:name ?mountainName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += "	tA:isIncludedBy tA:"+localityName+". }\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("mountainName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Mountain mountain = new Mountain();
+	      mountain.setName(name.toString());
+	      mountain.setLatitude(latitude.getDouble());
+	      mountain.setLongitude(longitude.getDouble());
+	      mountain.setNearByLocality(localityName);
+	      mountainList.add(mountain);
+	    }
+		return mountainList;
 	}
 	
 	public List<Mountain> getMountainInProximity(String localityName)
@@ -998,6 +1071,42 @@ public class ItineraryService {
 		return mountainList;
 	}
 	
+	public List<Lake> getLakesNearByLocality(String localityName)
+	{	
+		List<Lake> lakeList = new ArrayList<Lake>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?lakeName ?latid ?longit where { \n";
+		queryString += "?lake rdf:type tA:Lake; \n tA:name ?lakeName; \n geo:lat ?latid; \n geo:long ?longit;\n";
+		queryString += "	tA:isIncludedBy tA:"+localityName+". }\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("lakeName") ;
+	      Literal longitude = soln.getLiteral("longit");
+	      Literal latitude = soln.getLiteral("latid");
+	      Lake lake = new Lake();
+	      lake.setName(name.toString());
+	      lake.setLatitude(latitude.getDouble());
+	      lake.setLongitude(longitude.getDouble());
+	      lake.setNearByLocality(localityName);
+	      lakeList.add(lake);
+	    }
+		return lakeList;
+	}
+	
 	public List<Lake> getLakeInProximity(String localityName)
 	{	
 		List<Lake> lakeList = new ArrayList<Lake>();
@@ -1032,6 +1141,92 @@ public class ItineraryService {
 	      lakeList.add(lake);
 	    }
 		return lakeList;
+	}
+	
+	public List<OtherNaturalAttraction> getOtherNaturalAttractionsNearByLocality(String localityName)
+	{
+		List<OtherNaturalAttraction> attractionsList = new ArrayList<OtherNaturalAttraction>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?attractionName ?lat ?long ?cityName where { \n";
+		queryString += "?attraction rdf:type tA:OtherNaturalAttraction; \n";
+		queryString += "tA:name ?attractionName; \n";
+		queryString += " tA:isContainedBy ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("attractionName") ;
+	      Literal longitude = soln.getLiteral("long");
+	      Literal latitude = soln.getLiteral("lat");
+	      Literal city = soln.getLiteral("cityName");
+	      
+	      OtherNaturalAttraction attraction = new OtherNaturalAttraction();
+	      attraction.setName(name.toString());
+	      attraction.setLatitude(latitude.getDouble());
+	      attraction.setLongitude(longitude.getDouble());
+	      attraction.setNearByLocality(city.toString());
+	      attractionsList.add(attraction);
+	    }
+		return attractionsList;
+	}
+	
+	public List<OtherNaturalAttraction> getOtherNaturalAttractionsInProximity(String localityName)
+	{
+		List<OtherNaturalAttraction> attractionsList = new ArrayList<OtherNaturalAttraction>();
+		
+		String queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n";
+		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n ";
+		queryString += "PREFIX tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?attractionName ?lat ?long ?cityName where { \n";
+		queryString += "?attraction rdf:type tA:OtherNaturalAttraction; \n";
+		queryString += "tA:name ?attractionName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		ResultSet results = qexec.execSelect() ;
+	    System.out.println(results.getResultVars().toString());
+	    for ( ; results.hasNext() ; )
+	    {
+	      QuerySolution soln = results.nextSolution() ;	     
+	      Literal name = soln.getLiteral("attractionName") ;
+	      Literal longitude = soln.getLiteral("long");
+	      Literal latitude = soln.getLiteral("lat");
+	      Literal city = soln.getLiteral("cityName");
+	      
+	      OtherNaturalAttraction attraction = new OtherNaturalAttraction();
+	      attraction.setName(name.toString());
+	      attraction.setLatitude(latitude.getDouble());
+	      attraction.setLongitude(longitude.getDouble());
+	      attraction.setLocalityProximity(city.toString());
+	      attractionsList.add(attraction);
+	    }
+		return attractionsList;
 	}
 	
 	public List<EntertainmentObjective> getEntertainmentObjectivesNearByLocality(String localityName){
@@ -1192,6 +1387,41 @@ public class ItineraryService {
 		    }
 		    
 		return entertainmentList;
+	}
+	
+	public List<Activity> getAllActivities(){
+		List<Activity> activityList = new ArrayList<Activity>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString += "select ?activityName ?specificObjective where { \n";
+		queryString += "?activity rdf:type tA:Activity; \n tA:name ?activityName; \n";
+		queryString += "tA:isSpecificTo ?specificObjectiv.\n }\n";
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		//((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal activity = soln.getLiteral("activityName") ; 
+		      Literal obj = soln.getLiteral("specificObjectiv");
+		      Activity currentActivity = new Activity();
+		      currentActivity.setActivityName(activity.getString());
+		      activityList.add(currentActivity);
+		    }
+		    
+		return activityList;
 	}
 	
 }
