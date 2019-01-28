@@ -20,11 +20,12 @@ angular.module('app.controllers', []).controller('LoginController', function($sc
   $scope.logout = function(){ 
 	  logout();
   };
-}).controller('CountryListController', ['$scope', '$http', '$stateParams', 
-	function($scope, $http, $stateParams, Employee) {
-	$http.get("/itineraries/showCountries")
-    						.then(function (response) { 
-    							$scope.countries = response.data;
-    							$scope.currentUsername = getCookie("username");
-    						})
-}]);
+}).controller('CountryListController', function($scope, $stateParams, Country) {
+//	see services for definition of country
+	$scope.countries = Country.query(); 
+	$scope.currentUsername = getCookie("username");
+	$scope.submitCountry = function(item) { 
+		console.log(item);
+		$state.go('showCountries'); 
+	  };
+});
