@@ -45,9 +45,12 @@ public class ItineraryController {
 	public List<Locality> getLocalitiesByActivities(@RequestParam(value = "countryName") String countryName,
 			@RequestParam (value = "activity") String activity)
 	{
-		List<Locality>listOfLocalities = itineraryService.listOfLocalititesByActivity(countryName,activity);
+		List<Locality>listOfLocalities;
+		
 		if (activity == "")
-			listOfLocalities = getCitiesByCountry(countryName);
+			listOfLocalities = itineraryService.getCitiesByCountry(countryName);
+		else  
+			listOfLocalities = itineraryService.listOfLocalititesByActivity(countryName,activity);
 		
 		return listOfLocalities;
 	}
