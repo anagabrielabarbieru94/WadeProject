@@ -15,8 +15,12 @@ angular.module('navController', [])
 				url: '#/'
 			},
 			{
-				name: 'PendingJourney',
+				name: 'Countries',
 				url: '#/itineraries/showCountries'
+			},
+			{
+				name: 'Cities',
+				url: '#/itineraries/showLocalities'
 			}
 		]
 	});

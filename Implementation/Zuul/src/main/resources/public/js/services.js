@@ -10,6 +10,12 @@ angular.module('app.services', []).factory('LoginDto', function($resource) {
 		      method: 'PUT'
 		    }
 		  });
+}).factory('Activity', function($resource) {
+	  return $resource('/itineraries/showActivities/:id', { id: '@id' }, {
+		    update: {
+		      method: 'PUT'
+		    }
+		  });
 }).service('popupService',function($window){
     this.showPopup=function(message){
         return $window.confirm(message);

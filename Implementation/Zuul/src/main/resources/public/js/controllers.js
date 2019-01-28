@@ -20,12 +20,20 @@ angular.module('app.controllers', []).controller('LoginController', function($sc
   $scope.logout = function(){ 
 	  logout();
   };
-}).controller('CountryListController', function($scope, $stateParams, Country) {
+}).controller('CountryListController', function($scope, $state, $stateParams, Country, Activity) {
 //	see services for definition of country
 	$scope.countries = Country.query(); 
+	$scope.activities = Activity.query();
 	$scope.currentUsername = getCookie("username");
-	$scope.submitCountry = function(item) { 
-		console.log(item);
-		$state.go('showCountries'); 
+	$scope.submitCountry = function(item,selectedActivity) { 
+		$state.go('showLocalities', {"countryName": item.name, "activity": selectedActivity.activityName}); 
 	  };
-});
+}).controller('LocalitiesListController', ['$scope', '$http', '$stateParams', 
+	function($scope, $http, $stateParams) {
+	$http.get("/itineraries/showLocalities", {params:{"countryName": $stateParams.countryName, 
+		"activity": $stateParams.activity}})
+		.then(function (response) { 
+    			$scope.localities = response.data;
+    			$scope.currentUsername = getCookie("username");
+    })
+}]);

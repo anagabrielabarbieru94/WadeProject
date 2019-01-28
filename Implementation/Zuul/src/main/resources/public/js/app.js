@@ -51,6 +51,11 @@
 	        templateUrl: viewsPrefix + 'country.html',
 	        controller:'CountryListController'
 			})
+			.state('showLocalities',{
+	        url:'/itineraries/showLocalities/:countryName&:activity',
+	        templateUrl: viewsPrefix + 'locality.html',
+	        controller:'LocalitiesListController'
+			})
 	})
 	.directive('updateTitle', ['$rootScope', '$timeout',
 		function($rootScope, $timeout) {
