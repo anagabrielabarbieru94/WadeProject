@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wade.model.Accomodation;
 import wade.model.Country;
+import wade.model.EntertainmentObjective;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
@@ -197,4 +198,27 @@ public class ItineraryController {
 		return lakeList ;
 	}
 	
+	@RequestMapping(value = "/showEntertainmentObjectives",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<EntertainmentObjective> getNearByEntertainmentObjectives(@RequestParam(value = "localityName") String localityName)
+	{
+		List<EntertainmentObjective> entertainmentList = itineraryService.getEntertainmentObjectivesNearByLocality(localityName);
+		return entertainmentList ;
+	}
+	
+	@RequestMapping(value = "/showEntertainmentObjectivesInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<EntertainmentObjective> getEntertainmentObjectivesInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<EntertainmentObjective> entertainmentList = itineraryService.getEntertainmentObjectivesInProximity(localityName);
+		return entertainmentList ;
+	}
+	
+	@RequestMapping(value = "/showAllEntertainmentObjectives",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<EntertainmentObjective> getAllEntertainmentObjectives(@RequestParam(value = "localityName") String localityName)
+	{
+		List<EntertainmentObjective> entertainmentList = itineraryService.getAllEntertainmentObjectivesAroundLocality(localityName);
+		return entertainmentList;
+	}
 }

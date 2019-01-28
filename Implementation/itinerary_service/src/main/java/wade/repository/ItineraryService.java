@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import wade.model.Accomodation;
 import wade.model.Country;
+import wade.model.EntertainmentObjective;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
@@ -1031,6 +1032,166 @@ public class ItineraryService {
 	      lakeList.add(lake);
 	    }
 		return lakeList;
+	}
+	
+	public List<EntertainmentObjective> getEntertainmentObjectivesNearByLocality(String localityName){
+		List<EntertainmentObjective> entertainmentsList = new ArrayList<EntertainmentObjective>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?objectiveName ?lat ?long ?cityName where { \n";
+		queryString += "?objective rdf:type tA:EntertainmentObjective; \n tA:name ?objectiveName; \n";
+		queryString += "tA:isContainedBy ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		//((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal obj = soln.getLiteral("objectiveName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      EntertainmentObjective objective = new EntertainmentObjective();
+		      objective.setName(obj.getString());
+		      objective.setLatitude(lat.getDouble());
+		      objective.setLongitude(lng.getDouble());
+		      objective.setNearByLocality(c.toString());
+		      
+		      entertainmentsList.add(objective);
+		      System.out.println("Printez " + obj.toString());
+		    }
+		    
+		return entertainmentsList;
+	}
+	
+	public List<EntertainmentObjective> getEntertainmentObjectivesInProximity(String localityName){
+		List<EntertainmentObjective> entertainmentsList = new ArrayList<EntertainmentObjective>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString += "select ?objectiveName ?lat ?long ?cityName where { \n";
+		queryString += "?objective rdf:type tA:EntertainmentObjective; \n tA:name ?objectiveName; \n";
+		queryString += "tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\" , \"i\"). }\n";
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		//((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal obj = soln.getLiteral("objectiveName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      EntertainmentObjective objective = new EntertainmentObjective();
+		      objective.setName(obj.getString());
+		      objective.setLatitude(lat.getDouble());
+		      objective.setLongitude(lng.getDouble());
+		      objective.setLocalityProximity(c.toString());
+		      
+		      entertainmentsList.add(objective);
+		      System.out.println("Printez " + obj.toString());
+		    }
+		    
+		return entertainmentsList;
+	}
+	
+	public List<EntertainmentObjective> getAllEntertainmentObjectivesAroundLocality(String localityName){
+		List<EntertainmentObjective> entertainmentList = new ArrayList<EntertainmentObjective>();
+		
+		String queryString = "";
+		queryString+="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString+="PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
+		queryString+="PREFIX tA: <http://www.example.com/touristAsist#>\n";
+		queryString+="PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n";
+		queryString+="select * { \n { \n";
+		
+		//get proximity hotels
+		queryString += "select ?attractionName ?lat ?long ?cityName where { \n";
+		queryString += "?attraction rdf:type tA:EntertainmentObjective; \n tA:name ?attractionName; \n";
+		queryString += " tA:inProximityOf ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		
+		queryString += "}\n UNION \n {\n";
+		
+		//get nearby hotels
+		queryString += "select ?attractionName ?lat ?long ?cityName where { \n";
+		queryString += "?attraction rdf:type tA:EntertainmentObjective; \n tA:name ?attractionName; \n";
+		queryString += " tA:isContainedBy ?city; \n";
+		queryString += "geo:lat ?lat; \n";
+		queryString += "geo:long ?long. \n ";
+		queryString += "?city tA:name ?cityName. \n";
+		queryString += "FILTER regex(?cityName, \""+ localityName + "\", \"i\"). }\n";
+		queryString += "}\n}\n";
+		
+		System.out.println(queryString);
+		
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
+		
+		//((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		
+
+		ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal obj = soln.getLiteral("attractionName") ; 
+		      Literal lat = soln.getLiteral("lat");
+		      Literal lng = soln.getLiteral("long");
+		      Literal c = soln.getLiteral("cityName") ;
+		      
+		      EntertainmentObjective objective = new EntertainmentObjective();
+		      objective.setName(obj.getString());
+		      objective.setLatitude(lat.getDouble());
+		      objective.setLongitude(lng.getDouble());
+		      objective.setLocalityProximity(c.toString());
+		      
+		      entertainmentList.add(objective);
+		      System.out.println("Printez " + obj.toString());
+		    }
+		    
+		return entertainmentList;
 	}
 	
 }
