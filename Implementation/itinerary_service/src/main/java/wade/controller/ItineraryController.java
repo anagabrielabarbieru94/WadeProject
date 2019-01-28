@@ -16,6 +16,7 @@ import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
 import wade.model.Museum;
+import wade.model.OtherCulturalAttraction;
 import wade.model.Restaurant;
 import wade.model.Seaside;
 import wade.model.Theater;
@@ -148,6 +149,29 @@ public class ItineraryController {
 		return theaterList;
 	}
 	
+	@RequestMapping(value = "/showOtherCulturalAttractions",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<OtherCulturalAttraction> getOtherCulturalAttractionsNearByLocality(@RequestParam(value = "localityName") String localityName)
+	{
+		List<OtherCulturalAttraction> theaterList = itineraryService.getOtherCulturalAttractionsNearByLocality(localityName);
+		return theaterList;
+	}
+	
+	@RequestMapping(value = "/showOtherCulturalAttractionsInProximity",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<OtherCulturalAttraction> getOtherCulturalAttractionsInProximity(@RequestParam(value = "localityName") String localityName)
+	{
+		List<OtherCulturalAttraction> theaterList = itineraryService.getOtherCulturalAttractionsInProximity(localityName);
+		return theaterList;
+	}
+	
+	@RequestMapping(value = "/showAllOtherCulturalAttractions",method = RequestMethod.GET, params= {"localityName"})
+	@ResponseBody
+	public List<OtherCulturalAttraction> getAllOtherCulturalAttractions(@RequestParam(value = "localityName") String localityName)
+	{
+		List<OtherCulturalAttraction> theaterList = itineraryService.getAllOthersCulturalAtrractionsAroundLocality(localityName);
+		return theaterList;
+	}
 	
 	@RequestMapping(value = "/showSeasides",method = RequestMethod.GET, params= {"localityName"})
 	@ResponseBody
