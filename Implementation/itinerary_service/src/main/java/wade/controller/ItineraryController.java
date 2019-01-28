@@ -289,4 +289,13 @@ public class ItineraryController {
 		return activities;
 	}
 	
+	@RequestMapping(value = "/showCities",method = RequestMethod.GET, params= {"latitude", "longitude"})
+	@ResponseBody
+	public List<String> getCitiesByCoordinates(@RequestParam(value = "latitude") Double latitude, 
+			@RequestParam(value = "longitude") Double longitude)
+	{
+		List<String> cities = itineraryService.getCityNearCoordinate(latitude, longitude);
+		return cities;
+	}
+	
 }

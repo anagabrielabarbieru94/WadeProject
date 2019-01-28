@@ -1464,4 +1464,41 @@ public class ItineraryService {
 	    
 		return localityList;
 	}
+	
+	public List<String> getCityNearCoordinate(double latitude, double longitude){
+		List<String> labelList = new ArrayList<String>();
+		
+		String queryString="";
+		queryString = "PREFIX bd: <http://www.bigdata.com/rdf#>\n" +
+                "PREFIX wikibase: <http://wikiba.se/ontology#>\n" +
+                "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" +
+                "PREFIX wd: <http://www.wikidata.org/entity/>\n" +
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+                "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n"+
+                "SELECT DISTINCT ?place ?label  WHERE\n{\n" +
+                "?place wdt:P31/wdt:P279* wd:Q515 . \n ?place wdt:P31/wdt:P279* wd:Q515 .\n" +
+                "?place rdfs:label ?label .\n FILTER (lang(?label) = \"en\") .\n" +
+                "SERVICE wikibase:around {\n" +
+                " ?place wdt:P625 ?location .\n" +
+                "bd:serviceParam wikibase:center \"Point(" +Double.toString(longitude)+" "+
+                Double.toString(latitude)+")\"^^geo:wktLiteral .\n"+
+                "bd:serviceParam wikibase:radius \"50\" .\n bd:serviceParam wikibase:distance ?distance .\n}\n"+
+                "SERVICE wikibase:label { bd:serviceParam wikibase:language \"en\" }\n"+
+                "}Order by  ?distance";
+		
+			Query query = QueryFactory.create(queryString);
+			System.out.println(queryString);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService("https://query.wikidata.org/sparql", queryString);
+			ResultSet results = qexec.execSelect() ;
+		    System.out.println(results.getResultVars().toString());
+		    for ( ; results.hasNext() ; )
+		    {
+		      QuerySolution soln = results.nextSolution() ;
+		     
+		      Literal locality = soln.getLiteral("label") ; 
+		      labelList.add(locality.getString());
+		    }
+		    
+		return labelList;
+	}
 }
