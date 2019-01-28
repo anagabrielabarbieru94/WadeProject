@@ -212,35 +212,35 @@ tA:isCapitalOf				rdf:type			owl:ObjectProperty;
 							owl:inverseOf       tA:hasCapital;
 							rdfs:comment		"A locality can be the capital of a country".
 
-tA:Sunbathing 				rdf:type 			tA:EntertainmentActivity;
-							tA:name   			"Sunbathing".
+tA:Sunbathing 				rdf:type 			tA:EntertainmentActivity.
+tA:Sunbathing				tA:name   			"Sunbathing".
 
-tA:Picnic					rdf:type 			tA:EntertainmentActivity;
-							tA:name   			"Picnic".
+tA:Picnic					rdf:type 			tA:EntertainmentActivity.
+tA:Picnic					tA:name   			"Picnic".
 
-tA:NatureWalking 			rdf:type			tA:EntertainmentActivity;
-							tA:name             "Nature Walking".
+tA:NatureWalking 			rdf:type			tA:EntertainmentActivity.
+tA:NatureWalking			tA:name             "Nature Walking".
 
-tA:Shopping					rdf:type			tA:EntertainmentActivity;
-							tA:name 			"Shopping".
+tA:Shopping					rdf:type			tA:EntertainmentActivity.
+tA:Shopping					tA:name 			"Shopping".
 
-tA:Hiking					rdf:type			tA:AdventureActivity;
-							tA:name  			"Hiking";
+tA:Hiking					rdf:type			tA:AdventureActivity.
+tA:Hiking					tA:name  			"Hiking".
 
-tA:Swimming					rdf:type			tA:AdventureActivity;
-							tA:name    			"Swimming".
+tA:Swimming					rdf:type			tA:AdventureActivity.
+tA:Swimming					tA:name    			"Swimming".
 
-tA:Skiing					rdf:type			tA:AdventureActivity;
-							tA:name 			"Skiing"
+tA:Skiing					rdf:type			tA:AdventureActivity.
+tA:Skiing					tA:name 			"Skiing".
 
-tA:Hunting					rdf:type			tA:AdventureActivity;
-							tA:name 			"Hunting".
+tA:Hunting					rdf:type			tA:AdventureActivity.
+tA:Hunting					tA:name 			"Hunting".
 
-tA:Sightseeing	 			rdf:type 			tA:CulturalActivity;
-							tA:name  			"Sightseeing".
+tA:Sightseeing	 			rdf:type 			tA:CulturalActivity.
+tA:Sightseeing				tA:name  			"Sightseeing".
 
-tA:SeeingAnExhibition		rdf:type			tA:CulturalActivity;
-							tA:name             "Seeing an exhibition".
+tA:SeeingAnExhibition		rdf:type			tA:CulturalActivity.
+tA:SeeingAnExhibition		tA:name             "Seeing an exhibition".
 
-tA:SeeingAStagePlay			rdf:type			tA:CulturalActivity;
-							tA:name  			"Seeing a stage play".
+tA:SeeingAStagePlay			rdf:type			tA:CulturalActivity.
+tA:SeeingAStagePlay			tA:name  			"Seeing a stage play".
