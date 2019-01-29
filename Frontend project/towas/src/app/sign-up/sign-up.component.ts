@@ -86,10 +86,19 @@ export class SignUpComponent implements OnInit {
           ])
         ]),
         confirmPassword: new FormControl('', [
-          Validators.required
+          Validators.required,
+          Validators.compose([
+            Validators.minLength(8),
+            PasswordValidators.patternValidator(/\d/, { hasNumber: true }),
+            PasswordValidators.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
+            PasswordValidators.patternValidator(/[a-z]/, { hasSmallCase: true }),
+            PasswordValidators.patternValidator(/[_+\-=,.]/, { hasSpecialCharacters: true })
         ])
+      ])
     }, {
-      validator: PasswordValidators.validate.bind(this)
+      validator: Validators.compose([
+        PasswordValidators.validate.bind(this),
+        PasswordValidators.checkLength.bind(this)])
     });
 
     this.form = this.formBuilder.group({

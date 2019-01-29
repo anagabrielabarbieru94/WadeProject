@@ -15,17 +15,36 @@ export class PasswordValidators{
 
   static validate(form: FormGroup) {
     let password = form.controls.password.value;
-    let repeatPassword = form.controls.confirmPassword.value;
+    let confirmPassword = form.controls.confirmPassword.value;
 
-    if (repeatPassword.length == 0) {
+    if (confirmPassword.length <= 0) {
         return null;
     }
 
-    if (repeatPassword !== password) {
+    if (confirmPassword != password) {
+      // console.log('Nu se potrivesc');
         return {
             doesNotMatchPassword: true
         };
     }
+
+    return null;
+  }
+
+  static checkLength(form: FormGroup) {
+    let password = form.controls.password.value;
+    let confirmPassword = form.controls.confirmPassword.value;
+
+    if (confirmPassword.length <= 0) {
+        return null;
+    }
+
+    if ((confirmPassword.length > password.length) || (confirmPassword.length < password.length)){
+      // console.log('Nu au aceeasi dimensiune');
+      return {
+          doesNotHaveSameLength: true
+      };
+  }
 
     return null;
   }
