@@ -52,11 +52,15 @@ public class ItineraryController {
 	}
 	
 	@RequestMapping(value = "/itinerary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void processItinerary(@RequestBody ItineraryDto itineraryDto) {
+	public void processItinerary(@RequestBody ItineraryDto itineraryDto)
+	{
 		// TODO alex save
+		
 		if (itineraryDto.getMuseums() != null && !itineraryDto.getMuseums().isEmpty()) {
 			System.out.println(itineraryDto.getMuseums().get(0).getName() + itineraryDto.getMuseums().get(0).isSelected());
 		}
+	
+		itineraryService.insertCurrentItinerary(itineraryDto);
 	}
 	
 	@RequestMapping(value = "/showLocalities", method =RequestMethod.GET, params= {"countryName","activity"})

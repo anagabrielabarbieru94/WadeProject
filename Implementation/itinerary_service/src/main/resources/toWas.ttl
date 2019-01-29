@@ -99,7 +99,7 @@ tA:Itinerary 			  rdf:type 				owl:Class;
 #Properties
 
 tA:name 					rdf:type 			owl:DatatypeProperty ;
-							rdfs:domain         tA:Restaurant, tA:Accomodation, tA:TouristicObjective, tA:Activity, tA:Locality, tA:Country ;
+							rdfs:domain         tA:Restaurant, tA:Accomodation, tA:TouristicObjective, tA:Activity, tA:Locality, tA:Country, tA:Itinerary;
 							rdfs:range    		xsd:string ;
 							rdfs:comment        "Name of the resource".		
 

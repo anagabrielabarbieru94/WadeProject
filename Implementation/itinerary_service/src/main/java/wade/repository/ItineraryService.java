@@ -22,6 +22,7 @@ import wade.model.Accomodation;
 import wade.model.Activity;
 import wade.model.Country;
 import wade.model.EntertainmentObjective;
+import wade.model.ItineraryDto;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
@@ -1515,5 +1516,23 @@ public class ItineraryService {
 		    }
 		    
 		return labelList;
+	}
+	
+	public void insertCurrentItinerary(ItineraryDto itineraryDto)
+	{
+		String itineraryName = itineraryDto.getItineraryName().replaceAll("\\s","_");
+		String queryString = "";
+		queryString += "prefix tA: <http://www.example.com/touristAsist#> \n";
+		queryString += "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
+		queryString += "INSERT DATA { GRAPH <http://example.com/touristAsist> \n";
+		queryString += "{		tA:"+itineraryName+" rdf:type tA:Itinerary; \n";
+		
+		for (Museum museum : itineraryDto.getMuseums())
+			queryString += "tA:involve tA:" + museum.getName().replaceAll("\\s","_") + " \n";
+		queryString += "tA:name " + itineraryDto.getItineraryName() +". } \n }";
+	
+		Query query = QueryFactory.create(queryString);
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://localhost:7200/repositories/towas", query);
 	}
 }
