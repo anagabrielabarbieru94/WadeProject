@@ -42,6 +42,21 @@ public class ItineraryService {
 		model = FileManager.get().loadModel(path);
 	}
 	
+	private String getEntity(String activity)
+	{
+		switch(activity)
+		{
+		case "Seeing an exhibition":
+			return "SeeingAnExhibition";
+		case "Nature walking":
+			return "NatureWalking";
+		case "Seeing a stage play":
+			return "SeeingAStagePlay";
+		default:
+			return activity;
+		}
+	}
+	
 	public List<Country> getAllCountries()
 	{
 		List<Country> availableCountries = new ArrayList<Country>();
@@ -63,7 +78,7 @@ public class ItineraryService {
 		QueryExecution qexec = QueryExecutionFactory.sparqlService(
 				"http://localhost:7200/repositories/towas", query);
 		
-		//((QueryEngineHTTP)qexec).addParam("timeout", "10000");
+		((QueryEngineHTTP)qexec).addParam("timeout", "10000");
 		
 		    ResultSet results = qexec.execSelect() ;
 		    System.out.println(results.getResultVars().toString());
@@ -88,9 +103,7 @@ public class ItineraryService {
 		      capitalLocality.setLatitude(lat.getDouble());
 		      capitalLocality.setLongitude(lat.getDouble());
 		      currentCountry.setCapital(capitalLocality);
-		      
-		      availableCountries.add(currentCountry);
-		      System.out.println("Printez " + l.toString());
+		      availableCountries.add(currentCountry);  
 		    }
 		 
 		return availableCountries;
@@ -1428,7 +1441,9 @@ public class ItineraryService {
 	public List<Locality>listOfLocalititesByActivity(String countryName,String activity)
 	{
 		List<Locality> localityList = new ArrayList<Locality>();
+		activity = getEntity(activity);
 		
+		System.out.println("Activitatea modificata " + activity);
 		String queryString="";
 		queryString += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n";
 		queryString += "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n";
