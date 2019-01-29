@@ -9,6 +9,21 @@
 			<ul><p><mark>Museums</mark></p>
         		<li ng-repeat="museum in itinerary.museums">{{museum.name}}</li>
         	</ul>
+        	<ul><p><mark>Other cultural attractions</mark></p>
+        		<li ng-repeat="oca in itinerary.otherCulturalAttractions">{{oca.name}}</li>
+        	</ul>
+        	<ul><p><mark>Mountains</mark></p>
+        		<li ng-repeat="mountain in itinerary.mountains">{{mountain.name}}</li>
+        	</ul>
+        	<ul><p><mark>Lakes</mark></p>
+        		<li ng-repeat="lake in itinerary.lakes">{{lake.name}}</li>
+        	</ul>
+        	<ul><p><mark>Other natural attractions</mark></p>
+        		<li ng-repeat="ona in itinerary.otherNaturalAttractions">{{ona.name}}</li>
+        	</ul>
+        	<ul><p><mark>Entertainment objectives</mark></p>
+        		<li ng-repeat="funObj in itinerary.entertainmentObjectives">{{funObj.name}}</li>
+        	</ul>
 			</collapsible-item> 
 	</ang-accordion>
 </div>
