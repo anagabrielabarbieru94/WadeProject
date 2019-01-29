@@ -15,6 +15,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.update.UpdateAction;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.util.FileManager;
 import org.springframework.stereotype.Service;
 
@@ -1520,6 +1523,7 @@ public class ItineraryService {
 	
 	public void insertCurrentItinerary(ItineraryDto itineraryDto)
 	{
+		System.out.println("Primesc "+ itineraryDto.getItineraryName());
 		String itineraryName = itineraryDto.getItineraryName().replaceAll("\\s","_");
 		String queryString = "";
 		queryString += "prefix tA: <http://www.example.com/touristAsist#> \n";
@@ -1528,11 +1532,11 @@ public class ItineraryService {
 		queryString += "{		tA:"+itineraryName+" rdf:type tA:Itinerary; \n";
 		
 		for (Museum museum : itineraryDto.getMuseums())
-			queryString += "tA:involve tA:" + museum.getName().replaceAll("\\s","_") + " \n";
-		queryString += "tA:name " + itineraryDto.getItineraryName() +". } \n }";
+			queryString += "tA:involve tA:" + museum.getName().replaceAll("\\s","_") + "; \n";
+		queryString += "tA:name \"" + itineraryDto.getItineraryName() +"\". } \n }";
 	
-		Query query = QueryFactory.create(queryString);
-		QueryExecution qexec = QueryExecutionFactory.sparqlService(
-				"http://localhost:7200/repositories/towas", query);
+		System.out.println(queryString);
+		UpdateRequest query = UpdateFactory.create(queryString);
+		UpdateAction.execute(query,model);
 	}
 }
