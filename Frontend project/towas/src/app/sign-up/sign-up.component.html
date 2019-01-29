@@ -59,21 +59,21 @@
         <label for="password">Password </label>
         <input type="password" formControlName = 'password' class="form-control" id="password">
         <div *ngIf = "passwordForm.controls.password.touched && passwordForm.controls.password.invalid" class="alert alert-danger" style="width: 100%;">
-          <div *ngIf = 'passwordForm.controls.password.errors?.required'>Password is required.</div>
-          <div *ngIf = 'passwordForm.controls.password.errors?.hasNumber'>Password must contain at least one digit (0-9).</div>
-          <div *ngIf = 'passwordForm.controls.password.errors?.hasCapitalCase'>Password must contain at least one capital case letter (A-Z).</div>
-          <div *ngIf = 'passwordForm.controls.password.errors?.hasSmallCase'>Password must contain at least one small case letter (a-z).</div>
-          <div *ngIf = 'passwordForm.controls.password.errors?.hasSpecialCharacters'>Password must contain at least one special character (_+\-=,.).</div>
-          <div *ngIf = 'passwordForm.controls.password.errors?.minlength'>Password must be at least 8 characters long.</div>
+          <div *ngIf = 'passwordForm.controls.password.errors.required'>Password is required.</div>
+          <div *ngIf = 'passwordForm.controls.password.errors.hasNumber'>Password must contain at least one digit (0-9).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors.hasCapitalCase'>Password must contain at least one capital case letter (A-Z).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors.hasSmallCase'>Password must contain at least one small case letter (a-z).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors.hasSpecialCharacters'>Password must contain at least one special character (_+\-=,.).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors.minlength'>Password must be at least 8 characters long.</div>
         </div>
       </div>
 
       <div class="mb-3">
         <label for="confirmPassword">Re-enter password </label>
         <input type="password" formControlName = 'confirmPassword' class="form-control" id="confirmPassword">
-        <div *ngIf = "passwordForm.controls.confirmPassword.touched  && passwordForm.controls.password.invalid" class="alert alert-danger" style="width: 100%;">
+        <div *ngIf = "passwordForm.controls.confirmPassword.touched  && (passwordForm.controls.confirmPassword.invalid || passwordForm.errors)" class="alert alert-danger" style="width: 100%;">
           <div *ngIf = 'passwordForm.controls.confirmPassword.errors?.required'>You must re-type the password.</div>
-          <div *ngIf = 'passwordForm.errors?.doesNotMatchPassword'>Passwords doesn't match. Please re-type it.</div>
+          <div *ngIf = 'passwordForm.errors?.doesNotMatchPassword || passwordForm.errors?.doesNotHaveSameLength'>Passwords doesn't match. Please re-type it.</div>
         </div>
       </div>
     </div>
