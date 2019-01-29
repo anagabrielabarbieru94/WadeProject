@@ -24,12 +24,14 @@ import org.springframework.stereotype.Service;
 import wade.model.Accomodation;
 import wade.model.Activity;
 import wade.model.Country;
+import wade.model.CulturalAttraction;
 import wade.model.EntertainmentObjective;
 import wade.model.ItineraryDto;
 import wade.model.Lake;
 import wade.model.Locality;
 import wade.model.Mountain;
 import wade.model.Museum;
+import wade.model.NaturalAttraction;
 import wade.model.OtherCulturalAttraction;
 import wade.model.OtherNaturalAttraction;
 import wade.model.Restaurant;
@@ -1533,9 +1535,29 @@ public class ItineraryService {
 		
 		for (Museum museum : itineraryDto.getMuseums())
 			queryString += "tA:involve tA:" + museum.getName().replaceAll("\\s","_") + "; \n";
+
+		for (OtherCulturalAttraction other: itineraryDto.getOtherCulturalAttractions())
+			queryString += "tA:involve tA:" + other.getName().replaceAll("\\s","_") + "; \n";
+		
+		for (Restaurant rest : itineraryDto.getRestaurants())
+			queryString += "tA:involve tA:" + rest.getName().replaceAll("\\s","_") + "; \n";
+		
+		for (Mountain mountain: itineraryDto.getMountains())
+			queryString += "tA:involve tA:" + mountain.getName().replaceAll("\\s","_") + "; \n";
+		
+		for (Lake lake: itineraryDto.getLakes())
+			queryString += "tA:involve tA:" + lake.getName().replaceAll("\\s","_") + "; \n";
+		
+		for (OtherNaturalAttraction other : itineraryDto.getOtherNaturalAttractions())
+			queryString += "tA:involve tA:" + other.getName().replaceAll("\\s","_") + "; \n";
+		
+		for (EntertainmentObjective entertain : itineraryDto.getEntertainmentObjectives())
+			queryString += "tA:involve tA:" + entertain.getName().replaceAll("\\s","_") + "; \n";
+		
 		queryString += "tA:name \"" + itineraryDto.getItineraryName() +"\". } \n }";
-	
+
 		System.out.println(queryString);
+		
 		UpdateRequest query = UpdateFactory.create(queryString);
 		UpdateAction.execute(query,model);
 	}
