@@ -5,8 +5,8 @@ public abstract class CulturalAttraction {
 	protected String name;
 	protected String proximityLocalityName;
 	protected String nearByLocalityName;
-	protected Double latitude;
-	protected Double longitude;
+	protected double latitude;
+	protected double longitude;
 
 	public CulturalAttraction() {
 		

@@ -5,8 +5,8 @@ public abstract class NaturalAttraction {
 	protected String name;
 	protected String proximityLocalityName;
 	protected String nearByLocalityName;
-	protected Double latitude;
-	protected Double longitude;
+	protected double latitude;
+	protected double longitude;
 	
 	public NaturalAttraction() {
 		
