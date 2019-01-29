@@ -47,9 +47,11 @@ angular.module('app.controllers', []).controller('LoginController', function($sc
 		$scope.itineraryDto.museums = $scope.museums;
 		
 		$scope.itineraryDto.$save(function() {
-		      $state.go('showCountries'); 
+		      $state.go('showItineraries'); 
 		    });
 	};
-}).controller('ItinerariesListController', function($scope, $state, $stateParams) {
+}).controller('ItinerariesListController', function($scope, $state, $stateParams, $resource) {
 	$scope.currentUsername = getCookie("username");
+	var Itinerary = $resource('/itineraries/getAll');
+	$scope.itineraries =Itinerary.query();
 });
