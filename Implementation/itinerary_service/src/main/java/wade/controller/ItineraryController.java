@@ -57,6 +57,7 @@ public class ItineraryController {
 		// TODO alex save
 		
 		if (itineraryDto.getMuseums() != null && !itineraryDto.getMuseums().isEmpty()) {
+			itineraryDto.getMuseums().removeIf(m -> !m.isSelected());	
 			System.out.println(itineraryDto.getMuseums().get(0).getName() + itineraryDto.getMuseums().get(0).isSelected());
 		}
 	
