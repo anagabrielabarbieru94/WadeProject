@@ -21,10 +21,11 @@ public abstract class AccountController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Customer login(@RequestBody LoginDto body) throws Exception {
 		System.out.println(body.getPassword() + " " +body.getUserName() );
-		//Customer result = repository.getEmployeeByUsername(body.getUserName());
-		Customer result = new Customer();
-		result.setUsername("alex");
-		result.setPassword("alex");
+		// TODO ana
+		Customer result = repository.findByUsername(body.getUserName());
+//		Customer result = new Customer();
+//		result.setUsername("alex");
+//		result.setPassword("alex");
 		if(result != null) {
 			return result.getPassword().equals(body.getPassword()) ? result : null;
 		} else {
