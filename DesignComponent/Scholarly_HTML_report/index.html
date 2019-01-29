@@ -109,31 +109,11 @@
         	</p>	
         </li>
 
-        <li>
-        	<p>
-        		<strong>AdvisorService<br></strong>
-        		This service can be very useful in case of some unexepected happenings during an itinerary. Maybe our user is too tired to reach at the next location and he needs some informations related to the nearest restaurants or hotels. Based on GPS location of the user, this service will also use the same SparQL endpoint to find the best solution which will meet user's need. It also can be used like an adviser in case of an user in a foreign city, which wants to visit as much as possible in short period of time.  
-        	</p>
-        </li>
-
-        <li>
-        	<p>
-        		<strong>ShareExperienceService<br></strong>
-        		Being a tourist assitant application, maybe our user is experiencing great moments that he wants to share to some social media friends. In this case, this service uses some Twitter and Instagram APIs such that offers the possibility to the user to share some images, videos, or thoughts regarding the best moments from the itinerary. 
-        	</p>	
-        </li>
-
-        <li>
-        	<p>
-        		<strong>TranslateService<br></strong>
-        		This service offers the functionality of translating all the pages of the application in three different languages using some translation APIs like Google Cloud Translation API.
-        	</p>
-        </li>
 	</section>
 
 	<section id="Application Data Storage">
 		<h3>Application Data Storage</h3>
-		<strong>Tourist Web Assitant</strong> uses two ways of storing data. On the one hand, it uses a classical MySQL database table for user's personal information: username, password, e-mail, prefferences, itinerary history. On the other hand, the rest of the information provided by application's microservices are offered by a SparQL endpoint containing entities like: touristic objective, accomodation, restaurant, activity, route and itinerary. All of them are saved in a graph and correlated with other entities.
+		<strong>Tourist Web Assistant</strong> uses two ways of storing data. On the one hand, it uses a classical MySQL database table for user's personal information: username, password, e-mail, prefferences, itinerary history. On the other hand, the rest of the information provided by application's microservices are offered by a SparQL endpoint containing entities like: touristic objective, accomodation, restaurant, activity, route and itinerary. All of them are saved in a graph and correlated with other entities.
 
 		<figure typeof = "sa:Image"> 
 		<img src="public/resources/RDF-SCHEMA.jpg">
@@ -145,10 +125,106 @@
 		</figure>
 
 		<p>
-			The <strong>RDF Graph</strong> will be populated based on information provided by <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page">Wikidata</a> and <a href="http://linkedgeodata.org/About">Linked-Geo-Data</a> datasets. All the relations between entities and properties will be created using a "Towas" vocabulary, which will be constructed over the existent vocabularies. 
+			The <strong>RDF Graph</strong> will be populated based on information provided by <a href="https://www.geonames.org/">Geonames</a> and <a href="https://wiki.dbpedia.org/about">DBPedia</a>. All the relations between entities and properties are created using a "Towas" vocabulary, which is be constructed over the existent vocabularies. 
 		</p>	
 	</section>
+    <section id="Application development">
+        <p> After the design phase that was presented for the previous project component, the effective application development has followed the next steps: 
+        </p>
 
+        <li>    
+            <strong>Ontology development</strong>
+            <p>This was one of the defining parts of the project development, because it have assumed the modelling of our toWas knowledge base. This is including entities such as countries, cities, accomodations, restaurants, different touristic objectives and relations between them created using a "Towas" vocabulary, which is be constructed over the existent vocabularies. 
+
+            First step was defining our classes and properties, and then we populated a GraphDB endpoint with the specific instances.
+            </p>
+
+            <figure typeof = "sa:Image"> 
+            <img src="public/resources/rdf_classes.PNG">
+            <figcaption>
+                <center>
+                    RDF Classes example
+                </center>
+            </figcaption>
+            </figure>
+
+            <p>
+            For the population procedure, the main datasources used were <a href="https://wiki.dbpedia.org/about">DBPedia</a> and <a href="https://www.geonames.org/">Geonames</a>. Firstly, we have extracted via DBPedia SparQL quieries some touristic significant countries and inserted them in our triple store. Then for each country, we have selected via Geonames web API the most important cities, and we have done in the same way with the hotels, restaurants and touristic objectives from the proximity of every city. Using the properties declared earlier, we made a separation between the entities within a city and those from its surrounding area, in order to give better suggestions for users.
+            </p>
+
+            <figure typeof = "sa:Image"> 
+            <img src="public/resources/statements.PNG">
+            <figcaption>
+                <center>
+                    Some statements after population
+                </center>
+            </figcaption>
+            </figure>
+     
+        <li>
+            <strong>Microservices development</strong>
+            <p>As we mentioned earlier, the application is separated into 2 individual microservices.</p>
+            <li>
+                The Account Service plays the role of user registration and authentification, and also keeps a tracking of his itineraries.
+            </li>
+
+            <li>
+                The most important service is the itinerary service that stands as travel assistant for the user. It is exposed as RESTFul API, providing methods that in fact allows the user to find travel suggestions and make his own itineraries.
+
+                Behind these methods implementations, the app is communicating with the toWas triple store populated earlier via SparQL queries, to get specific information.
+
+                For example, for the path "/showCountries", the services makes a query to obtain all Country instances from the triple store.
+
+                There are some basic queries for interrogating the several different entities from and in the proximity of a certain city that the user wants to visit, the service making available GET methods for any type of instance (accomodation, restaurant, museum etc).
+
+                <figure typeof = "sa:Image"> 
+                <img src="public/resources/theater_query.PNG">
+                <figcaption>
+                    <center>
+                        Query that retrives the theaters in proximity of a certain city.
+                    </center>
+                </figcaption>
+                </figure>
+
+                A more complex SparQL query is based on the user preferences about some traveling specific activities that are also stored in the triple store. Each activity is related to a specific type of touristic objective. For example, it is clear that you can do skiing or hiking only in a mountain area or you can see an exhibition in a museum.
+                Having the user favourite country and activities, the service queries the endpoint to retrieve all the cities from that country that contains touristic objectives related with these.
+                This query can be seen below:
+
+                <figure typeof = "sa:Image"> 
+                    <img src="public/resources/city_by_activity.PNG">
+                    <figcaption>
+                        <center>
+                            Get city by favourite activity
+                        </center>
+                    </figcaption>
+                </figure>
+            </li>
+
+            <li>
+                <strong>Adviser service</strong>
+                <p>This is a service that has planned in the design phase, but we haven't manage to integrate it. Based on the user coordinates (GPS localisation), this service was supposed to make suggestions with accomodations, restaurants and objectives from his proximity. Regarding this, having the coordinates, at this moment we managed to write a query to find out the nearest towns. The query and results shown below. </p>
+
+                <figure typeof = "sa:Image"> 
+                    <img src="public/resources/nearest_cities.PNG">
+                    <figcaption>
+                        <center>
+                            Get nearest towns by coordinates
+                        </center>
+                    </figcaption>
+                </figure>
+
+                <figure typeof = "sa:Image"> 
+                    <img src="public/resources/nearest_cities_results.PNG">
+                    <figcaption>
+                        <center>
+                            Get nearest towns by coordinates
+                        </center>
+                    </figcaption>
+                </figure>
+
+            </li>
+        </li>
+    </section>
     <section id="Conclusion">
     	<h3>Conclusions</h3>
     	<p>
