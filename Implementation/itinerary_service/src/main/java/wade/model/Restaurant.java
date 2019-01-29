@@ -6,9 +6,18 @@ public class Restaurant {
 	private double longitude;
 	private String isContainedBy;
 	private String inProximityOf;
+	private boolean isSelected;
 	
 	public Restaurant() {
 		
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 
 	public String getName() {

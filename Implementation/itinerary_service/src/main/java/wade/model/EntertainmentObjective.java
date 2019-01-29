@@ -7,11 +7,20 @@ public class EntertainmentObjective {
 	protected String nearByLocalityName;
 	protected double latitude;
 	protected double longitude;
+	private boolean isSelected;
 	
 	public EntertainmentObjective() {
 		
 	}
 	
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+
 	public String getName()
 	{
 		return this.name;

@@ -1,6 +1,5 @@
 <div class="container pad-top">
 <form name="form" class="form-signin" role="form">
-
 		<div class="form-group">
 			<label for="itinerary" class="col-sm-2 control-label">Itinerary
 				name</label>
@@ -12,12 +11,10 @@
 		<br>	<hr>	
 			
 	<div class="row">
-
 		<table class="table categorytable table-bordered">
 			<thead>
 				<tr>
-					<th style="width: 20%; border-right: 1px solid;">Select
-						museum</th>
+					<th style="width: 20%; border-right: 1px solid;">Select museum</th>
 					<th style="width: 10%;">#</th>
 					<th style="width: 20%;">Museum name</th>
 				</tr>
@@ -34,6 +31,140 @@
 			</tr>
 		</table>
 	</div>
+	
+	<div class="row">
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select other cultural attraction</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Other cultural attraction name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="can in cans"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="can.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{can.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="row">
+
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select restaurant</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Restaurant name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="restaurant in restaurants"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="restaurant.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{restaurant.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="row">
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select mountain</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Mountain name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="mountain in mountains"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="mountain.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{mountain.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="row">
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select lake</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Lake name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="lake in lakes"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="lake.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{lake.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="row">
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select other natural attraction</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Other natural attraction name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="ona in onas"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="ona.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{ona.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="row">
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select entertainment attraction</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Entertainment attraction name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="funObj in funObjs"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="funObj.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{funObj.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	
 	<button class="btn btn-danger pull-right" ng-disabled="form.$invalid" ng-click="submitObjectives()">Submit</a>
 	</form>
 </div>
