@@ -56,6 +56,16 @@
 	        templateUrl: viewsPrefix + 'locality.html',
 	        controller:'LocalitiesListController'
 			})
+			.state('chooseObjectives',{
+	        url:'/itineraries/objectives/:localityName',
+	        templateUrl: viewsPrefix + 'objectives.html',
+	        controller:'ObjectivesListController'
+			})
+			.state('showItineraries',{
+	        url:'/itineraries/getAll',
+	        templateUrl: viewsPrefix + 'itineraries.html',
+	        controller:'ItinerariesListController'
+			})
 	})
 	.directive('updateTitle', ['$rootScope', '$timeout',
 		function($rootScope, $timeout) {

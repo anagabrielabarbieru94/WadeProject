@@ -1,0 +1,39 @@
+<div class="container pad-top">
+<form name="form" class="form-signin" role="form">
+
+		<div class="form-group">
+			<label for="itinerary" class="col-sm-2 control-label">Itinerary
+				name</label>
+			<div class="col-sm-4">
+				<input type="text" id="itinerary" ng-model="itinerary"
+					class="form-control" ng-required="true" />
+			</div>
+		</div>
+		<br>	<hr>	
+			
+	<div class="row">
+
+		<table class="table categorytable table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 20%; border-right: 1px solid;">Select
+						museum</th>
+					<th style="width: 10%;">#</th>
+					<th style="width: 20%;">Museum name</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="museum in museums"
+				selection-model selection-model-type="'checkbox'"
+				selection-model-mode="'single'"
+				selection-model-selected-class="'foobar'">
+				<td>
+					<input type="checkbox" ng-model="museum.selected">
+				</td>
+				<td>{{$index + 1}}</td>
+				<td style="width: 20%;"><b>{{museum.name}}</b></td>
+			</tr>
+		</table>
+	</div>
+	<button class="btn btn-danger pull-right" ng-disabled="form.$invalid" ng-click="submitObjectives()">Submit</a>
+	</form>
+</div>

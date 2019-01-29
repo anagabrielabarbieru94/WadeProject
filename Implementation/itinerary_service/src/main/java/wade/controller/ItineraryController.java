@@ -1,5 +1,6 @@
 package wade.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,20 @@ public class ItineraryController {
 	protected ItineraryService itineraryService;
 	
 	@RequestMapping(value = "/showCountries", method = RequestMethod.GET)
-	@ResponseBody
 	public List<Country>  findAllCountries()
 	{
 		List<Country> countries = itineraryService.getAllCountries();
 		
 		return countries;
+	}
+	
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
+	public List<ItineraryDto>  findItineraries()
+	{
+		// TODO alex
+		List<ItineraryDto> itineraries = new ArrayList<>();
+		
+		return itineraries;
 	}
 	
 	@RequestMapping(value = "/itinerary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -133,6 +142,7 @@ public class ItineraryController {
 	@ResponseBody
 	public List<Museum> getNearbyMuseumsByLocality(@RequestParam(value = "localityName") String localityName)
 	{
+		// TODO alex check if empty list
 		List<Museum> museumList = itineraryService.getMuseumsNearByLocality(localityName);
 		return museumList;
 	}

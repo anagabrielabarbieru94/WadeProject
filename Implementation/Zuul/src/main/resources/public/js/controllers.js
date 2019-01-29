@@ -21,7 +21,6 @@ angular.module('app.controllers', []).controller('LoginController', function($sc
 	  logout();
   };
 }).controller('CountryListController', function($scope, $state, $stateParams, Country, Activity) {
-//	see services for definition of country
 	$scope.countries = Country.query(); 
 	$scope.activities = Activity.query();
 	$scope.currentUsername = getCookie("username");
@@ -36,4 +35,21 @@ angular.module('app.controllers', []).controller('LoginController', function($sc
     			$scope.localities = response.data;
     			$scope.currentUsername = getCookie("username");
     })
-}]);
+}]).controller('ObjectivesListController', function($scope, $state, $stateParams, $resource, ItineraryDto) {
+	var Museum = $resource('/itineraries/showMuseums?localityName=:localityName', {localityName: '@localityName'});
+	$scope.museums =Museum.query({localityName: $stateParams.localityName});
+	$scope.currentUsername = getCookie("username");
+	
+	$scope.submitObjectives = function() { 
+		console.log($scope.museums);
+		$scope.itineraryDto = new ItineraryDto();
+		$scope.itineraryDto.itineraryName = $scope.itinerary;
+		$scope.itineraryDto.museums = $scope.museums;
+		
+		$scope.itineraryDto.$save(function() {
+		      $state.go('showCountries'); 
+		    });
+	};
+}).controller('ItinerariesListController', function($scope, $state, $stateParams) {
+	$scope.currentUsername = getCookie("username");
+});

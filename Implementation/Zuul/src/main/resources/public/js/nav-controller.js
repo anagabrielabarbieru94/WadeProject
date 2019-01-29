@@ -19,8 +19,8 @@ angular.module('navController', [])
 				url: '#/itineraries/showCountries'
 			},
 			{
-				name: 'Cities',
-				url: '#/itineraries/showLocalities'
+				name: 'Saved itineraries',
+				url: '#/itineraries/getAll'
 			}
 		]
 	});

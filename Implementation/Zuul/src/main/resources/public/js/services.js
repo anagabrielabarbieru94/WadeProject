@@ -16,6 +16,18 @@ angular.module('app.services', []).factory('LoginDto', function($resource) {
 		      method: 'PUT'
 		    }
 		  });
+}).factory('Museum', function($resource) {
+	  return $resource('/itineraries/showMuseums/:localityName', { localityName: '@localityName' }, {
+		    update: {
+		      method: 'PUT'
+		    }
+		  });
+}).factory('ItineraryDto', function($resource) {
+	  return $resource('/itineraries/itinerary/:id', { id: '@id' }, {
+		    update: {
+		      method: 'PUT'
+		    }
+		  });
 }).service('popupService',function($window){
     this.showPopup=function(message){
         return $window.confirm(message);
