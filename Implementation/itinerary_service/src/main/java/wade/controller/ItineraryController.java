@@ -54,11 +54,8 @@ public class ItineraryController {
 	@RequestMapping(value = "/itinerary", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void processItinerary(@RequestBody ItineraryDto itineraryDto)
 	{
+		itineraryService.filerOutNonSelectedItems(itineraryDto);
 		// TODO alex save
-		if (itineraryDto.getMuseums() != null && !itineraryDto.getMuseums().isEmpty()) {
-			itineraryDto.getMuseums().removeIf(m -> !m.isSelected());	
-			//System.out.println(itineraryDto.getMuseums().get(0).getName() + itineraryDto.getMuseums().get(0).isSelected());
-		}
 		itineraryService.insertCurrentItinerary(itineraryDto);
 	}
 	

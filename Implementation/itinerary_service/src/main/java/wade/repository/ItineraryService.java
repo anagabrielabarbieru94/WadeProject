@@ -1539,4 +1539,28 @@ public class ItineraryService {
 		UpdateRequest query = UpdateFactory.create(queryString);
 		UpdateAction.execute(query,model);
 	}
+	
+	public void filerOutNonSelectedItems(ItineraryDto itineraryDto) {
+		if (itineraryDto.getMuseums() != null && !itineraryDto.getMuseums().isEmpty()) {
+			itineraryDto.getMuseums().removeIf(m -> !m.isSelected());	
+		}
+		if (itineraryDto.getEntertainmentObjectives() != null && !itineraryDto.getEntertainmentObjectives().isEmpty()) {
+			itineraryDto.getEntertainmentObjectives().removeIf(m -> !m.isSelected());	
+		}
+		if (itineraryDto.getLakes() != null && !itineraryDto.getLakes().isEmpty()) {
+			itineraryDto.getLakes().removeIf(m -> !m.isSelected());	
+		}
+		if (itineraryDto.getMountains() != null && !itineraryDto.getMountains().isEmpty()) {
+			itineraryDto.getMountains().removeIf(m -> !m.isSelected());	
+		}
+		if (itineraryDto.getOtherCulturalAttractions() != null && !itineraryDto.getOtherCulturalAttractions().isEmpty()) {
+			itineraryDto.getOtherCulturalAttractions().removeIf(m -> !m.isSelected());	
+		}
+		if (itineraryDto.getOtherNaturalAttractions() != null && !itineraryDto.getOtherNaturalAttractions().isEmpty()) {
+			itineraryDto.getOtherNaturalAttractions().removeIf(m -> !m.isSelected());	
+		}
+		if (itineraryDto.getRestaurants() != null && !itineraryDto.getRestaurants().isEmpty()) {
+			itineraryDto.getRestaurants().removeIf(m -> !m.isSelected());	
+		}
+	}
 }

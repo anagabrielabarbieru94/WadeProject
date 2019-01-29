@@ -7,11 +7,20 @@ public abstract class NaturalAttraction {
 	protected String nearByLocalityName;
 	protected double latitude;
 	protected double longitude;
+	private boolean isSelected;
 	
 	public NaturalAttraction() {
 		
 	}
 	
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+
 	public String getName()
 	{
 		return this.name;
