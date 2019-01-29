@@ -21,7 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PlanATripComponent } from './plan-a-trip/plan-a-trip.component';
 import { GetAnAdviceComponent } from './get-an-advice/get-an-advice.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -35,7 +35,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     GetAnAdviceComponent,
     SignUpComponent
   ],
-  imports: [BrowserModule,
+  imports: [
+    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,

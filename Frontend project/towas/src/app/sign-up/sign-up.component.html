@@ -9,19 +9,24 @@
       <div class="col-md-6 mb-3">
         <label for="firstName">First name</label>
         <input type="text" formControlName = 'firstName' class="form-control" id="firstName" placeholder="Smith">
-        <div *ngIf = "firstName.touched && firstName.invalid" class="alert alert-danger" style="width: 100%;">
-          <div *ngIf = 'firstName.errors.required'>First name is required.</div>
-          <div *ngIf = 'firstName.errors.cannotContainSpace'>First name cannot contain space characters.</div>
+        <div *ngIf = "form.controls.firstName.touched && form.controls.firstName.invalid" class="alert alert-danger" style="width: 100%;">
+          <div *ngIf = 'form.controls.firstName.errors.required'>First name is required.</div>
+          <div *ngIf = 'form.controls.firstName.errors.cannotContainSpace'>First name cannot contain space characters.</div>
         </div>
       </div>
       <div class="col-md-6 mb-3">
         <label for="lastName">Last name</label>
         <input type="text" formControlName = 'lastName' class="form-control" id="lastName" placeholder="John">
-        <div *ngIf = "lastName.touched && lastName.invalid" class="alert alert-danger" style="width: 100%;">
-          <div *ngIf = 'lastName.errors.required'>Last name is required.</div>
-          <div *ngIf = 'lastName.errors.cannotContainSpace'>Last name cannot contain space characters.</div>
+        <div *ngIf = "form.controls.lastName.touched && form.controls.lastName.invalid" class="alert alert-danger" style="width: 100%;">
+          <div *ngIf = 'form.controls.lastName.errors.required'>Last name is required.</div>
+          <div *ngIf = 'form.controls.lastName.errors.cannotContainSpace'>Last name cannot contain space characters.</div>
         </div>
       </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="address">Address<span class="text-muted">(Optional)</span></label>
+      <input type="text" class="form-control" id="address" placeholder="1234 Main St">
     </div>
 
     <div class="mb-3">
@@ -31,10 +36,10 @@
           <span class="input-group-text">@</span>
         </div>
         <input type="text"  formControlName = 'username' class="form-control" id="username" placeholder="Username">
-        <div *ngIf = "username.touched && username.invalid" class="alert alert-danger" style="width: 100%;">
-          <div *ngIf = 'username.errors.required'>Username is required.</div>
-          <div *ngIf = 'username.errors.minlength'>Username should be minimum 6 characters.</div>
-          <div *ngIf = 'username.errors.cannotContainSpace'>Username cannot contain space characters.</div>
+        <div *ngIf = "form.controls.username.touched && form.controls.username.invalid" class="alert alert-danger" style="width: 100%;">
+          <div *ngIf = 'form.controls.username.errors.required'>Username is required.</div>
+          <div *ngIf = 'form.controls.username.errors.minlength'>Username should be minimum 6 characters.</div>
+          <div *ngIf = 'form.controls.username.errors.cannotContainSpace'>Username cannot contain space characters.</div>
         </div>
       </div>
     </div>
@@ -42,37 +47,35 @@
     <div class="mb-3">
       <label for="email">Email </label>
       <input type="email" formControlName = 'email' class="form-control" id="email" placeholder="you@example.com">
-      <div *ngIf = "email.touched && email.invalid" class="alert alert-danger" style="width: 100%;">
-        <div *ngIf = 'email.errors.required'>Email is required.</div>
-        <div *ngIf = 'email.errors.email'>The email address is not valid.</div>
+      <div *ngIf = "form.controls.email.touched && form.controls.email.invalid" class="alert alert-danger" style="width: 100%;">
+        <div *ngIf = 'form.controls.email.errors.required'>Email is required.</div>
+        <div *ngIf = 'form.controls.email.errors.email'>The email address is not valid.</div>
       </div>
     </div>
     
-    <div class="mb-3">
-      <label for="password">Password </label>
-      <input type="password" formControlName = 'password' class="form-control" id="password">
-      <div *ngIf = "password.touched && password.invalid" class="alert alert-danger" style="width: 100%;">
-        <div *ngIf = 'password.errors.required'>Password is required.</div>
-        <div *ngIf = 'password.errors.hasNumber'>Password must contain at least one digit (0-9).</div>
-        <div *ngIf = 'password.errors.hasCapitalCase'>Password must contain at least one capital case letter (A-Z).</div>
-        <div *ngIf = 'password.errors.hasSmallCase'>Password must contain at least one small case letter (a-z).</div>
-        <div *ngIf = 'password.errors.hasSpecialCharacters'>Password must contain at least one special character (_+\-=,.).</div>
-        <div *ngIf = 'password.errors.minlength'>Password must be at least 8 characters long.</div>
-      </div>
-    </div>
 
-    <div class="mb-3">
-      <label for="confirmPassword">Re-enter password </label>
-      <input type="password" formControlName = 'confirmPassword' class="form-control" id="confirmPassword">
-      <div *ngIf = "confirmPassword.touched && confirmPassword.invalid" class="alert alert-danger" style="width: 100%;">
-        <div *ngIf = 'confirmPassword.errors.required'>You must re-type the password.</div>
-        <div *ngIf = 'confirmPassword.errors.passwordMatchValidator'>Passwords doesn't match.</div>
+    <div [formGroup] = "passwordForm">
+      <div class="mb-3">
+        <label for="password">Password </label>
+        <input type="password" formControlName = 'password' class="form-control" id="password">
+        <div *ngIf = "passwordForm.controls.password.touched && passwordForm.controls.password.invalid" class="alert alert-danger" style="width: 100%;">
+          <div *ngIf = 'passwordForm.controls.password.errors?.required'>Password is required.</div>
+          <div *ngIf = 'passwordForm.controls.password.errors?.hasNumber'>Password must contain at least one digit (0-9).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors?.hasCapitalCase'>Password must contain at least one capital case letter (A-Z).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors?.hasSmallCase'>Password must contain at least one small case letter (a-z).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors?.hasSpecialCharacters'>Password must contain at least one special character (_+\-=,.).</div>
+          <div *ngIf = 'passwordForm.controls.password.errors?.minlength'>Password must be at least 8 characters long.</div>
+        </div>
       </div>
-    </div>
 
-    <div class="mb-3">
-      <label for="address">Address<span class="text-muted">(Optional)</span></label>
-      <input type="text" class="form-control" id="address" placeholder="1234 Main St">
+      <div class="mb-3">
+        <label for="confirmPassword">Re-enter password </label>
+        <input type="password" formControlName = 'confirmPassword' class="form-control" id="confirmPassword">
+        <div *ngIf = "passwordForm.controls.confirmPassword.touched  && passwordForm.controls.password.invalid" class="alert alert-danger" style="width: 100%;">
+          <div *ngIf = 'passwordForm.controls.confirmPassword.errors?.required'>You must re-type the password.</div>
+          <div *ngIf = 'passwordForm.errors?.doesNotMatchPassword'>Passwords doesn't match. Please re-type it.</div>
+        </div>
+      </div>
     </div>
     <button class="btn btn-primary btn-lg btn-block" type="submit">Register into ToWAS</button>
   </form>

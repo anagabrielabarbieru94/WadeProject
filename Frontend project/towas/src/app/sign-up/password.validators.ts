@@ -1,4 +1,4 @@
-import { ValidationErrors, AbstractControl, ValidatorFn } from "@angular/forms";
+import { ValidationErrors, AbstractControl, ValidatorFn, FormGroup } from "@angular/forms";
 
 export class PasswordValidators{
   static patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn | null {
@@ -11,5 +11,22 @@ export class PasswordValidators{
   
       return valid ? null : error;
     };
+  }
+
+  static validate(form: FormGroup) {
+    let password = form.controls.password.value;
+    let repeatPassword = form.controls.confirmPassword.value;
+
+    if (repeatPassword.length == 0) {
+        return null;
+    }
+
+    if (repeatPassword !== password) {
+        return {
+            doesNotMatchPassword: true
+        };
+    }
+
+    return null;
   }
 }
