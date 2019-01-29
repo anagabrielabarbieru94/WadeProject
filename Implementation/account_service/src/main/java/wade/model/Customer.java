@@ -15,10 +15,11 @@ public class Customer implements Serializable{
 
 	private static final long serialVersionUID = -7723877704121464987L;
 
-	@Id
+	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
+	@Id
 	@Column(name = "username")
 	private String username;
 	
@@ -46,10 +47,10 @@ public class Customer implements Serializable{
 	public Customer() {
 	}
 	
-	public Customer(String firstName, String lastName,String userId,String password,String genre) {
+	public Customer(String firstName, String lastName,String username,String password,String genre) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.userId = userId;
+		this.username = username;
 		this.password = password;
 		this.genre = genre;
 	}
@@ -57,7 +58,8 @@ public class Customer implements Serializable{
 	public String getUsername() {
 		return username;
 	}
-
+	
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
