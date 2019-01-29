@@ -7,6 +7,7 @@ public abstract class CulturalAttraction {
 	protected String nearByLocalityName;
 	protected double latitude;
 	protected double longitude;
+	private boolean isSelected;
 
 	public CulturalAttraction() {
 		
@@ -60,5 +61,13 @@ public abstract class CulturalAttraction {
 	public void setLongitude(double longitude)
 	{
 		this.latitude = longitude;
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 }
