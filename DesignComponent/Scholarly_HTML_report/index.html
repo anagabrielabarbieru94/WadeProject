@@ -115,6 +115,7 @@
 		<h3>Application Data Storage</h3>
 		<strong>Tourist Web Assistant</strong> uses two ways of storing data. On the one hand, it uses a classical MySQL database table for user's personal information: username, password, e-mail, prefferences, itinerary history. On the other hand, the rest of the information provided by application's microservices are offered by a SparQL endpoint containing entities like: touristic objective, accomodation, restaurant, activity, route and itinerary. All of them are saved in a graph and correlated with other entities.
 
+        <p> In the design phase, our planned RDF graph schema looked like this: </p>
 		<figure typeof = "sa:Image"> 
 		<img src="public/resources/RDF-SCHEMA.jpg">
 		<figcaption>
@@ -123,6 +124,44 @@
 			</center>
 		</figcaption>
 		</figure>
+
+        <p> At this moment, we have the following configuration (classes and relations): </p>
+
+        <figure typeof = "sa:Image"> 
+        <img src="public/resources/itinerary_graph.PNG">
+        <figcaption>
+            <center>
+                Itinerary properties and relations
+            </center>
+        </figcaption>
+        </figure>
+
+        <figure typeof = "sa:Image"> 
+        <img src="public/resources/locality_graph.PNG">
+        <figcaption>
+            <center>
+                Locality relations
+            </center>
+        </figcaption>
+        </figure>
+
+        <figure typeof = "sa:Image"> 
+        <img src="public/resources/objective_graph.PNG">
+        <figcaption>
+            <center>
+                Touristic Objective relations
+            </center>
+        </figcaption>
+        </figure>
+
+        <figure typeof = "sa:Image"> 
+        <img src="public/resources/accomodation_graph.PNG">
+        <figcaption>
+            <center>
+                Accomodation relations
+            </center>
+        </figcaption>
+        </figure>
 
 		<p>
 			The <strong>RDF Graph</strong> will be populated based on information provided by <a href="https://www.geonames.org/">Geonames</a> and <a href="https://wiki.dbpedia.org/about">DBPedia</a>. All the relations between entities and properties are created using a "Towas" vocabulary, which is be constructed over the existent vocabularies. 
@@ -228,7 +267,7 @@
     <section id="Conclusion">
     	<h3>Conclusions</h3>
     	<p>
-    	TOWAS (Tourist Web Assitant) is an application destinated for those people who like traveling and need fast and dynamic information about their location and the best nearest place to be visited based on semantic web technologies. It also represents a solution for those who are in need of a food place or accomodation because the application take in consideration the updated GPS position of the user and is able to find the desired place. The application uses the experience, related stored data of the user in case of a first time using user. In this sense it can be improved with a machine learning based mechanism in order to recognize a specific profile of the user and offer recommendations based on these information too. 
+    	TOWAS (Tourist Web Assitant) is an application destinated for those people who like traveling and need fast and dynamic information about their desired location to be visited based on semantic web technologies. The application uses the experience, saving the user previous itineraries. The app could be improved with an adviser service (previously mentioned in the design component), which could give him suggestions of accomodations, restaurants and others, based on the current user geographic position (logitude and latitude) - GPS integration. Also, it can be improved with a machine learning based mechanism in order to recognize a specific profile of the user and offer recommendations based on these information too. 
     	</p>
     </section>
 
