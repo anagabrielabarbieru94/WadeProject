@@ -15,7 +15,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.sparql.modify.UpdateProcessRemote;
 import org.apache.jena.update.UpdateAction;
+import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.util.FileManager;
@@ -1559,7 +1561,8 @@ public class ItineraryService {
 		System.out.println(queryString);
 		
 		UpdateRequest query = UpdateFactory.create(queryString);
-		UpdateAction.execute(query,model);
+		UpdateProcessRemote riStore = (UpdateProcessRemote) UpdateExecutionFactory.createRemote(query, "http://localhost:7200/repositories/towas/statements");
+		riStore.execute();
 	}
 	
 	public void filerOutNonSelectedItems(ItineraryDto itineraryDto) {
